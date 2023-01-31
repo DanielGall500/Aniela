@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fastapi = "*"
+uvicorn = {extras = ["standard"], version = "*"}
+jwt = "*"
+pysqlite3 = "*"
+passlib = "*"
+argon2-cffi = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"
