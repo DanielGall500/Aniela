@@ -11,6 +11,8 @@ passlib = "*"
 argon2-cffi = "*"
 python-dotenv = "*"
 pyjwt = {extras = ["crypto"], version = "*"}
+psutil = "*"
+requests = "*"
 
 [dev-packages]
 
