@@ -13,6 +13,7 @@ python-dotenv = "*"
 pyjwt = {extras = ["crypto"], version = "*"}
 psutil = "*"
 requests = "*"
+jinja2 = "*"
 
 [dev-packages]
 

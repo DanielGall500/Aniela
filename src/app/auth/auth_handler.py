@@ -3,7 +3,7 @@ from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 import sqlite3
 
-auth_db = sqlite3.connect("app/auth/authentication.sqlite")
+auth_db = sqlite3.connect("app/database.sqlite")
 cursor = auth_db.cursor()
 ph = PasswordHasher()
 

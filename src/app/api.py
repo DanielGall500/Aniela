@@ -1,8 +1,10 @@
-from fastapi import FastAPI, Depends
-from fastapi.responses import RedirectResponse
+from fastapi import FastAPI, Depends, Request
+from fastapi.responses import RedirectResponse, HTMLResponse
 from app.models import LoginDetails, TranslateStatus, TranslateRequest, TranslateResponse
 from app.auth.auth_handler import authenticate_user
 from app.auth.auth_bearer import JWTBearer, signJWT
+from app.mt_server import model_connections, model_info
+from fastapi.templating import Jinja2Templates
 
 app = FastAPI(
     title="Adapt Translation API",
@@ -19,6 +21,8 @@ app = FastAPI(
         }
     ]
 )
+
+templates = Jinja2Templates(directory="app/templates")
 
 @app.get("/", tags=["Maintenance"])
 async def root():
@@ -47,3 +51,11 @@ async def login(request: LoginDetails):
         return { "access_token": token }
     else:
         return user_authentication
+
+@app.get("/status", response_class=HTMLResponse, tags=["Maintenance"])
+async def status(request: Request):
+    global model_connections
+    model_connections.connect_to_all()
+    return templates.TemplateResponse("model_status.html", {"request": request, "connections": model_connections.all_as_dict()})
+
+    
