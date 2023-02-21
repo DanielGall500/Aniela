@@ -1,9 +1,9 @@
 from fastapi import FastAPI, Depends, Request
-from fastapi.responses import RedirectResponse, HTMLResponse
+from fastapi.responses import RedirectResponse, HTMLResponse, JSONResponse
 from app.models import LoginDetails, TranslateStatus, TranslateRequest, TranslateResponse
 from app.auth.auth_handler import authenticate_user
 from app.auth.auth_bearer import JWTBearer, signJWT
-from app.mt_server import model_connections, model_info
+from app.mt_models.connection import MTRequestHandler
 from fastapi.templating import Jinja2Templates
 
 app = FastAPI(
@@ -23,6 +23,7 @@ app = FastAPI(
 )
 
 templates = Jinja2Templates(directory="app/templates")
+mt_request_handler = MTRequestHandler()
 
 @app.get("/", tags=["Maintenance"])
 async def root():
@@ -38,7 +39,13 @@ async def translate(request: TranslateRequest):
     response = TranslateResponse()
     response.username = "Daniel"
     response.status = TranslateStatus()
-    return response
+    source = request.src
+    target = request.tgt
+    text = request.text
+
+    translation = await mt_request_handler.translate(source, target, text)
+
+    return JSONResponse(translation)
 
 @app.post("/login", tags=["User Authentication"])
 async def login(request: LoginDetails):

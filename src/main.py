@@ -1,10 +1,9 @@
-from app.mt_server import model_connections, model_info
 import uvicorn
 
 """
 TODO
-- setup a page which displays the information about each of the models and gives an example translation. This should make it easier
-for anyone to see whether they are currently online or not.
+- add UI to the status page
+- show a translation and the amount of time it took to receive it on this page
 - allow anyone with appropriate login credentials to restart the web server. Would be great if this could be the done for the MT servers too.
 - ensure that proper threading is in place to handle a lot of requests at once
 - set up tests that will stress test the server and also just test different things to make sure it's working. These tests should be usable 
