@@ -1,7 +1,10 @@
 <h1>Model Status</h1>
 {% for key in connections.keys() %}
     <p>{{key}}: {{ connections[key]["is_connected"] }} </p>
-    <p>Output: {{ connections[key]["output"] }}</p>
-    <p>Time (s): {{ connections[key]["time"] }}s</p>
+    {% if connections[key]["is_connected"] %}
+        <p>Input: {{ connections[key]["input"] }}</p>
+        <p>Output: {{ connections[key]["output"] }}</p>
+        <p>Time (s): {{ connections[key]["time"] }}s</p>
+    {% endif %}
     <br>
 {% endfor %}

@@ -49,7 +49,7 @@ class MTRequestHandler:
                 detokenized_target_output = self._detokenize(target_output, tgt)
 
                 # Save the resulting translation to the response
-                out['result'][tgt] = detokenized_target_output
+                out['result'][target_langs[i]] = detokenized_target_output
                 out['state'] = self.STATUS_OK
 
         # log the results of this translation to the output console
