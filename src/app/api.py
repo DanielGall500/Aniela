@@ -5,6 +5,7 @@ from app.auth.auth_handler import authenticate_user
 from app.auth.auth_bearer import JWTBearer, signJWT
 from app.mt_models.connection import MTRequestHandler
 from fastapi.templating import Jinja2Templates
+from app.mt_models.connection import MTServerConnection
 
 app = FastAPI(
     title="Adapt Translation API",
@@ -24,6 +25,7 @@ app = FastAPI(
 
 templates = Jinja2Templates(directory="app/templates")
 mt_request_handler = MTRequestHandler()
+mt_server_connection = MTServerConnection()
 
 @app.get("/", tags=["Maintenance"])
 async def root():
@@ -61,8 +63,8 @@ async def login(request: LoginDetails):
 
 @app.get("/status", response_class=HTMLResponse, tags=["Maintenance"])
 async def status(request: Request):
-    global model_connections
-    model_connections.connect_to_all()
-    return templates.TemplateResponse("model_status.html", {"request": request, "connections": model_connections.all_as_dict()})
+    await mt_server_connection.connect_to_all()
+    as_dict = mt_server_connection.all_as_dict()
+    return templates.TemplateResponse("model_status.html", {"request": request, "connections": as_dict})
 
     

@@ -1,4 +1,6 @@
 <h1>Model Status</h1>
 {% for key in connections.keys() %}
-    <p>{{key}}: {{ connections[key] }} </p>
+    <p>{{key}}: {{ connections[key]["is_connected"] }} </p>
+    <p>Output: {{ connections[key]["output"] }}</p>
+    <br>
 {% endfor %}
