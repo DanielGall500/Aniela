@@ -1,7 +1,6 @@
 from starlette.testclient import TestClient
 from app.api import app
 import requests
-from dotenv import dotenv_values
 from app.mt_models.information import model_info
 
 client = TestClient(app)

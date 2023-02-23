@@ -21,8 +21,6 @@ class MTServerConnection:
         self.model_connections_output = {}
         self.request_handler = MTRequestHandler()
 
-        self.connect_to_all()
-
     def __str__(self) -> str:
         connection_view = "\n"
         for key in self.model_connections.keys():

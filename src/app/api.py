@@ -6,6 +6,7 @@ from app.auth.auth_bearer import JWTBearer, signJWT
 from app.mt_models.connection import MTRequestHandler
 from fastapi.templating import Jinja2Templates
 from app.mt_models.connection import MTServerConnection
+import pytest
 
 app = FastAPI(
     title="Adapt Translation API",
@@ -31,11 +32,6 @@ mt_server_connection = MTServerConnection()
 async def root():
     return RedirectResponse(url="/redoc")
 
-@app.get("/restart", tags=["Maintenance"])
-async def restart():
-    print("Restarting the server...")
-    pass
-
 @app.post("/translate", dependencies=[Depends(JWTBearer())], response_model=TranslateResponse, tags=["Translation Calls"])
 async def translate(request: TranslateRequest):
     response = TranslateResponse()
@@ -49,7 +45,7 @@ async def translate(request: TranslateRequest):
 
     return JSONResponse(translation)
 
-@app.post("/login", tags=["User Authentication"])
+@app.post("/login", status_code=200, tags=["User Authentication"])
 async def login(request: LoginDetails):
     username = request.username
     password_attempt = request.password
@@ -61,10 +57,11 @@ async def login(request: LoginDetails):
     else:
         return user_authentication
 
-@app.get("/status", response_class=HTMLResponse, tags=["Maintenance"])
+@app.get("/dashboard", response_class=HTMLResponse, tags=["Maintenance"])
 async def status(request: Request):
     await mt_server_connection.connect_to_all()
     as_dict = mt_server_connection.all_as_dict()
     return templates.TemplateResponse("model_status.html", {"request": request, "connections": as_dict})
+
 
     

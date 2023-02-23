@@ -16,6 +16,8 @@ requests = "*"
 jinja2 = "*"
 sacremoses = "*"
 nltk = "*"
+pytest = "*"
+httpx = "*"
 
 [dev-packages]
 
