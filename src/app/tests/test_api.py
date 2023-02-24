@@ -4,6 +4,12 @@ from app.api import app
 import requests
 import json
 
+"""
+-- Pytest API Tests --
+The primary purpose of these tests is that the web API is sending the appropriate
+requests to the MT servers and receiving back a successful status code.
+"""
+
 # Environment variables used for testing
 config_app: dict = dotenv_values('app/.env')
 TEST_USERNAME: str = config_app["TEST_USERNAME"]
