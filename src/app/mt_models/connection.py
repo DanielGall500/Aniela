@@ -3,7 +3,6 @@ from app.mt_models.requests import MTRequestHandler
 import socket
 import time
 
-
 model_translation_test = {
     "en": "Climate change",
     "de": "Klimawandel",

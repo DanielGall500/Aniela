@@ -6,7 +6,6 @@ from app.auth.auth_bearer import JWTBearer, signJWT
 from app.mt_models.connection import MTRequestHandler
 from fastapi.templating import Jinja2Templates
 from app.mt_models.connection import MTServerConnection
-import pytest
 
 app = FastAPI(
     title="Adapt Translation API",
