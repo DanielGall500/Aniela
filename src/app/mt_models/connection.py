@@ -29,8 +29,8 @@ class MTServerConnection:
             connection_view += "\n"
         return connection_view
 
-    def translate(self):
-        pass
+    async def translate(self, source, target, text):
+        translation = await self.request_handler.translate(source, target, text)
 
     async def connect_to_all(self):
         language_pairs = model_info.get_all_languages_pairs()

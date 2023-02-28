@@ -15,7 +15,7 @@ as well as your Upwork profile.
 # This is the URL of the web server and not the MT servers
 config_app = dotenv_values('app/.env')
 WEB_SERVER_IP: str = config_app["WEB_SERVER_IP"]
-WEB_SERVER_PORT: str = config_app["WEB_SERVER_PORT"]
+WEB_SERVER_PORT: int = int(config_app["WEB_SERVER_PORT"])
 
 def main():
     # start up the web server with established connections

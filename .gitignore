@@ -2,6 +2,9 @@
 *.sqlite
 *.db
 
+# Local files
+local_users.txt
+
 # MT Test Servers
 mt_server/
 
