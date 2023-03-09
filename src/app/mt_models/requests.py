@@ -26,10 +26,16 @@ class MTRequestHandler:
             target_langs = [tgt]
 
         # Allocate the appropriate model for each src-tgt pair
-        model_ids = [model_info.get_language_pair_port(src,t) for t in target_langs]
+        model_server_endpoints = [model_info.get_language_pair_endpoint(src,t) for t in target_langs]
+        model_ids = [model_info.get_language_pair_ID(src,t) for t in target_langs]
+        num_models = len(model_ids)
+
+        print("Starting translation...")
 
         # Iterate through each language model that we need
-        for i,model_id in enumerate(model_ids):
+        for i in range(num_models):
+            model_server_endpoint = model_server_endpoints[i]
+            model_id = model_ids[i]
 
             # Convert the input text to a form more suitable for
             # the language model. This is known as tokenization.
@@ -38,8 +44,10 @@ class MTRequestHandler:
 
             # Associate each input sentence with the appropriate MT model 
             tokenized_sentences = [{'src': sentence, 'id': model_id} for sentence in tokenize_input]
+            print(tokenized_sentences)
 
-            response = self._send_request_to_MT_server(tokenized_sentences)
+            response = self._send_request_to_MT_server(model_server_endpoint, tokenized_sentences)
+            print("Translated...")
 
             if self._is_valid_server_response(response):
                 # Put together all the returned sentences into one string
@@ -87,8 +95,11 @@ class MTRequestHandler:
         tgt_text = mt.detokenize(tgt_sents.split())
         return tgt_text
 
-    def _send_request_to_MT_server(self, sentences: list[str]):
-        return requests.post(url=model_info.get_server_url(), json=sentences)
+    def _send_request_to_MT_server(self, endpoint: str, sentences: list[str]):
+        # server_ip = "http://0.0.0.0:8000/translator/translate"
+        print(sentences)
+        print("Sending request...")
+        return requests.post(url=endpoint, json=sentences, timeout=0.5)
 
     def _is_valid_server_response(self, response: requests.Response):
         return response.status_code == 200

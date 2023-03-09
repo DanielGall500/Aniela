@@ -18,6 +18,7 @@ sacremoses = "*"
 nltk = "*"
 pytest = "*"
 httpx = "*"
+pandas = "*"
 
 [dev-packages]
 

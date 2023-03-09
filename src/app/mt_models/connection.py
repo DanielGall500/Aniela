@@ -14,8 +14,6 @@ model_translation_test = {
 
 class MTServerConnection:
     def __init__(self):
-        self.MT_SERVER_IP = model_info.get_server_ip()
-        self.MT_SERVER_PORT = model_info.get_server_port()
         self.model_connections = {}
         self.model_connections_output = {}
         self.request_handler = MTRequestHandler()
@@ -41,10 +39,19 @@ class MTServerConnection:
 
     async def connect_to(self, src: str, tgt: str) -> bool:
         lang_pair_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        translation_test_input = ""
+        translation_test_output = ""
+        translation_test_time = -1
         
         try:
-            connection_result = lang_pair_socket.connect_ex((self.MT_SERVER_IP, self.MT_SERVER_PORT))
+            server_ip, server_port = model_info.get_language_pair_server_IP_and_port(src,tgt)
+
+            print("Checking server for " + src + "," + tgt)
+            print("Located at " + str(server_ip) + ":" + str(server_port))
+            connection_result = lang_pair_socket.connect_ex((server_ip, server_port))
+            print("Connected...")
             if connection_result != 0: 
+                print("Error")
                 raise socket.error()
 
             # Ensure an OK status is received when connecting to a particular model
@@ -52,9 +59,11 @@ class MTServerConnection:
             start_time = time.time()
             translation_test_response = await self.request_handler.translate(src, tgt, translation_test_input)
             translation_test_time = round(time.time() - start_time, 4)
+            print("Response received...")
 
             translation_test_output = translation_test_response["result"]
             is_model_available = translation_test_response["state"] == self.request_handler.STATUS_OK
+            print(is_model_available)
         except socket.error:
             is_model_available = False
 
