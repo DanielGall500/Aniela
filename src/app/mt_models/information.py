@@ -2,7 +2,7 @@ import sqlite3
 import numpy
 from dotenv import dotenv_values
 
-db = sqlite3.connect("app/database.sqlite")
+db = sqlite3.connect("app/database_newest.sqlite")
 cursor = db.cursor()
 
 # -- JWT Configuration Variables --
