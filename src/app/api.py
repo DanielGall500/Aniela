@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends, Request, status
+from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse, HTMLResponse
 from app.models import LoginDetails, TranslateRequest, TranslateResponse
 from app.auth.auth_handler import authenticate_user
@@ -29,14 +30,17 @@ app = FastAPI(
             "description": "Any routes which can be used by users to find more information about the machine translation models and also test their current operational status."
         },
     ],
-    redoc_url="/v2/docs"
+    redoc_url="/dashboard/docs",
+    docs_url=None
 )
 
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
+
 mt_request_handler = MTRequestHandler()
 mt_server_connection = MTServerConnection()
 
-@app.post("/v2/translate", dependencies=[Depends(JWTBearer())], response_model=TranslateResponse, 
+@app.post("/translate", dependencies=[Depends(JWTBearer())], response_model=TranslateResponse, 
     tags=["Translation Calls"], status_code=status.HTTP_201_CREATED,
     description="Submit a translation request to the API. A JSON web token must be provided in the header which is given to you once you log in.") 
 async def translate(request: TranslateRequest):
@@ -53,7 +57,7 @@ async def translate(request: TranslateRequest):
     response.result = translation["result"]
     return response
 
-@app.post("/v2/login", status_code=status.HTTP_201_CREATED, tags=["User Authentication"],
+@app.post("/login", status_code=status.HTTP_201_CREATED, tags=["User Authentication"],
     description="Log in using your username and password in order to receive a JWT.")
 async def login(request: LoginDetails):
     username = request.username
@@ -66,20 +70,22 @@ async def login(request: LoginDetails):
     else:
         return user_authentication
 
-@app.get("/v2/docs", tags=["Maintenance & Testing"],
-    description="The documentation that you're currently referring to.")
-async def docs():
-    return RedirectResponse(url="/redoc")
-
-@app.get("/v2", include_in_schema=False, tags=["Maintenance & Testing"])
-async def root():
-    return RedirectResponse(url="/redoc")
-
-@app.get("/v2/status", response_class=HTMLResponse, status_code=status.HTTP_201_CREATED, 
+# -- Translation API Dashboard Endpoints --
+@app.get("/dashboard", response_class=HTMLResponse, 
     description="Check the status of each of the language models", tags=["Maintenance & Testing"])
 async def status(request: Request):
     await mt_server_connection.connect_to_all()
     as_dict = mt_server_connection.all_as_dict()
-    return templates.TemplateResponse("model_status.html", {"request": request, "connections": as_dict})
+    # return templates.TemplateResponse("model_status.html", {"request": request, "connections": as_dict})
+    return templates.TemplateResponse("index.html", {"request": request, "connections": as_dict})
+
+@app.get("/dashboard/about", response_class=HTMLResponse, 
+    description="Check the status of each of the language models", tags=["Maintenance & Testing"])
+async def status(request: Request):
+    return templates.TemplateResponse("about.html", {"request": request})
+
+@app.get("/", include_in_schema=False, tags=["Maintenance & Testing"])
+async def root():
+    return RedirectResponse(url="/dashboard")
 
     
