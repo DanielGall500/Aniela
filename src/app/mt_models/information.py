@@ -1,7 +1,6 @@
 import sqlite3
 import numpy
 from dotenv import dotenv_values
-import pandas as pd
 
 db = sqlite3.connect("app/database.sqlite")
 cursor = db.cursor()
@@ -10,12 +9,20 @@ cursor = db.cursor()
 app_config = dotenv_values('app/.env')
 
 def get_server_IP_from_config(server: str) -> str:
-    server_ip = str(app_config[f"{server}_IP"])
+    try:
+        server_ip = str(app_config[f"{server}_IP"])
+    except Exception as e:
+        print(f"Server {server} not found.")
+        print(e)
     return str(server_ip)
 
 def get_server_port_from_config(server: str) -> int:
-    server_ip = app_config[f"{server}_PORT"]
-    return int(server_ip)
+    try:
+        server_port = app_config[f"{server}_PORT"]
+    except Exception as e:
+        print(f"Server {server} not found.")
+        print(e)
+    return int(server_port)
 
 # -- Translation Model Information --
 # The information provided by this class should be loaded into a python dictionary,
@@ -26,10 +33,38 @@ class MTModelInformation:
     # Language models can exist on different IPs and ports
     # This function will return which IP-port combination a
     # specific source and target language pair exists on
-    def get_language_pair_server_IP_and_port(self, src: str, tgt: str):
-        get_server_name = f"SELECT server FROM models WHERE source='{src}' AND target='{tgt}'"
+    CONFIG = {}
+    def __init__(self):
+        get_server_data = f"SELECT source, target, server, id FROM models"
         try:
-            server_name = cursor.execute(get_server_name).fetchone()[0]
+            server_data = cursor.execute(get_server_data).fetchall()
+        except Exception as e:
+            print("Invalid SQL Database for Server Data")
+            print(e)
+
+        for src, tgt, server, id in server_data:
+            # ensure that the mult-dimensional dictionary is 
+            # set up with both source and target as keys
+            if not src in self.CONFIG:
+                self.CONFIG[src] = {}
+                self.CONFIG[src][tgt] = {}
+            elif not tgt in self.CONFIG[src]:
+                self.CONFIG[src][tgt] = {}
+
+            self.CONFIG[src][tgt]['server'] = server
+            self.CONFIG[src][tgt]['id'] = id
+
+    # The URL that will correspond to a specific source and target language
+    def get_language_pair_endpoint(self, src: str, tgt:str) -> str:
+        ip, port = self.get_language_pair_server_IP_and_port(src, tgt)
+        if ip and port:
+            return f"http://{ip}:{port}/translator/translate"
+        else:
+            raise Exception("Invalid Source / Target Language")
+
+    def get_language_pair_server_IP_and_port(self, src: str, tgt: str):
+        try:
+            server_name = self.get_server(src, tgt)
             server_ip = get_server_IP_from_config(server_name)
             server_port = get_server_port_from_config(server_name)
         except Exception:
@@ -43,27 +78,31 @@ class MTModelInformation:
 
         return str(server_ip), int(server_port)
 
-    # Each language model has an ID associated with it on its corresponding MT server port
-    def get_language_pair_ID(self, src: str, tgt: str) -> int:
-        # change this in SQL to become ID and not port
-        get_port_query = f"SELECT port FROM models WHERE source='{src}' AND target='{tgt}'"
-        try:
-            port = cursor.execute(get_port_query).fetchone()[0]
-        except Exception:
-            return None 
-        return int(port)
+    def _contains_language_pair(self, src: str, tgt: str):
+        if src in self.CONFIG:
+            if tgt in self.CONFIG[src]:
+                return True
+        return False
 
-    # The URL that will correspond to a specific source and target language
-    def get_language_pair_endpoint(self, src: str, tgt:str) -> str:
-        ip, port = self.get_language_pair_server_IP_and_port(src, tgt)
-        if ip and port:
-            return f"http://{ip}:{port}/translator/translate"
-        else:
-            return "Invalid Source / Target Language"
+    def get_server(self, src: str, tgt: str) -> str | None:
+        if self._contains_language_pair(src, tgt):
+            server_name = self.CONFIG[src][tgt]['server']
+            return str(server_name)
+        return None
+
+    # Each language model has an ID associated with it on its corresponding MT server port
+    def get_language_pair_ID(self, src: str, tgt: str) -> int | None:
+        if self._contains_language_pair(src, tgt):
+            model_ID = self.CONFIG[src][tgt]['id']
+            return int(model_ID)
+        return None
 
     def get_all_languages_pairs(self) -> list[list]:
-        get_pairs_query = f"SELECT source,target FROM models"
-        pairs = cursor.execute(get_pairs_query).fetchall()
+        pairs = []
+        for src in self.CONFIG.keys():
+            for tgt in self.CONFIG[src].keys():
+                p = (src,tgt)
+                pairs.append(p)
         return pairs
 
     def get_all_languages(self) -> list:
