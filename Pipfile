@@ -19,6 +19,7 @@ nltk = "*"
 pytest = "*"
 httpx = "*"
 pandas = "*"
+locust = "*"
 
 [dev-packages]
 
