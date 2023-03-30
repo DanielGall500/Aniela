@@ -96,9 +96,6 @@ class MTRequestHandler:
         return tgt_text
 
     def _send_request_to_MT_server(self, endpoint: str, sentences: list[str]):
-        # server_ip = "http://0.0.0.0:8000/translator/translate"
-        print(sentences)
-        print("Sending request...")
         return requests.post(url=endpoint, json=sentences, timeout=0.5)
 
     def _is_valid_server_response(self, response: requests.Response):

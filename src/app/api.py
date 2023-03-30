@@ -66,7 +66,7 @@ async def login(request: LoginDetails):
     user_authentication = authenticate_user(username, password_attempt)
     if user_authentication["validated"]:
         token = signJWT(username)
-        return { "access_token": token }
+        return { "token": token }
     else:
         return user_authentication
 
