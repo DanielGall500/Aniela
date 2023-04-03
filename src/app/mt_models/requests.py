@@ -30,8 +30,6 @@ class MTRequestHandler:
         model_ids = [model_info.get_language_pair_ID(src,t) for t in target_langs]
         num_models = len(model_ids)
 
-        print("Starting translation...")
-
         # Iterate through each language model that we need
         for i in range(num_models):
             model_server_endpoint = model_server_endpoints[i]
@@ -44,10 +42,8 @@ class MTRequestHandler:
 
             # Associate each input sentence with the appropriate MT model 
             tokenized_sentences = [{'src': sentence, 'id': model_id} for sentence in tokenize_input]
-            print(tokenized_sentences)
 
             response = self._send_request_to_MT_server(model_server_endpoint, tokenized_sentences)
-            print("Translated...")
 
             if self._is_valid_server_response(response):
                 # Put together all the returned sentences into one string
@@ -61,7 +57,7 @@ class MTRequestHandler:
                 out['state'] = self.STATUS_OK
 
         # log the results of this translation to the output console
-        self._log_info(src, tgt, text, tokenized_sentences, out["state"])
+        # self._log_info(src, tgt, text, tokenized_sentences, out["state"])
         return out
 
     def get_available_languages(self):
