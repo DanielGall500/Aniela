@@ -1,7 +1,23 @@
 from sacremoses import MosesTokenizer, MosesPunctNormalizer, MosesDetokenizer
 from app.mt_models.information import model_info
+from threading import Thread
 import nltk
 import requests
+
+class ThreadWithReturnValue(Thread):
+    def __init__(self, *init_args, **init_kwargs):
+        Thread.__init__(self, *init_args, **init_kwargs)
+        self._return = None
+
+    def run(self):
+        try:
+            self._return = requests.post(self._args, json=self._kwargs['json'])
+        except Exception as e:
+            pass
+
+    def join(self):
+        Thread.join(self)
+        return self._return
 
 class MTRequestHandler:
     # Create sacremoses
@@ -28,36 +44,51 @@ class MTRequestHandler:
         # Allocate the appropriate model for each src-tgt pair
         model_server_endpoints = [model_info.get_language_pair_endpoint(src,t) for t in target_langs]
         model_ids = [model_info.get_language_pair_ID(src,t) for t in target_langs]
-        num_models = len(model_ids)
+        num_models = len(model_ids) # this will always be 5 languages pairs for 'all'
+
+        # Convert the input text to a form more suitable for
+        # the language model. This is known as tokenization.
+        # This also breaks the text into individual sentences
+        tokenize_input = self._tokenize(text, src)
 
         # Iterate through each language model that we need
+        TransThreadList = []
         for i in range(num_models):
             model_server_endpoint = model_server_endpoints[i]
             model_id = model_ids[i]
 
-            # Convert the input text to a form more suitable for
-            # the language model. This is known as tokenization.
-            # This also breaks the text into individual sentences
-            tokenize_input = self._tokenize(text, src)
-
             # Associate each input sentence with the appropriate MT model 
             tokenized_sentences = [{'src': sentence, 'id': model_id} for sentence in tokenize_input]
 
-            response = self._send_request_to_MT_server(model_server_endpoint, tokenized_sentences)
+            trans_thread = ThreadWithReturnValue(target=requests.post, args=(model_server_endpoint), kwargs={'json': tokenized_sentences})
+            TransThreadList.append(trans_thread)
+            trans_thread.start()
 
-            if self._is_valid_server_response(response):
-                # Put together all the returned sentences into one string
-                target_output = self._combine_response_sentences(response)
+            # response = self._send_request_to_MT_server(model_server_endpoint, tokenized_sentences)
 
-                # Detokenize this returned output to make it more reader-friendly
-                detokenized_target_output = self._detokenize(target_output, tgt)
+        out['state'] = "OK"
+        # use this to count the successful responsee from server. If all successed, this count will be equal to targets
+        for trans_thread in TransThreadList:
+            try:
+                res = trans_thread.join()
+            except:
+                print("No response received.")
+                continue
 
-                # Save the resulting translation to the response
-                out['result'][target_langs[i]] = detokenized_target_output
-                out['state'] = self.STATUS_OK
+        if self._is_valid_server_response(res):
+            # TODO: error handling?
+            translation_list = res.json()[0]
 
-        # log the results of this translation to the output console
-        # self._log_info(src, tgt, text, tokenized_sentences, out["state"])
+            # Put together all the returned sentences into one string
+            target_output = self._combine_response_sentences(translation_list)
+
+            # Detokenize this returned output to make it more reader-friendly
+            detokenized_target_output = self._detokenize(target_output, tgt)
+
+            # Save the resulting translation to the response
+            out['result'][target_langs[i]] = detokenized_target_output
+            out['state'] = self.STATUS_OK
+
         return out
 
     def get_available_languages(self):
@@ -92,14 +123,13 @@ class MTRequestHandler:
         return tgt_text
 
     def _send_request_to_MT_server(self, endpoint: str, sentences: list[str]):
-        return requests.post(url=endpoint, json=sentences, timeout=0.5)
+        return requests.post(url=endpoint, json=sentences)
 
     def _is_valid_server_response(self, response: requests.Response):
         return response.status_code == 200
 
-    def _combine_response_sentences(self, response) -> str:
+    def _combine_response_sentences(self, target_sentences) -> str:
         # TODO: error handling
-        target_sentences = response.json()[0]
         target_output = " ".join(target_sentence["tgt"] for target_sentence in target_sentences)
         return target_output
 
