@@ -4,6 +4,8 @@ from threading import Thread
 import nltk
 import requests
 
+nltk.download("punkt")
+
 class ThreadWithReturnValue(Thread):
     def __init__(self, *init_args, **init_kwargs):
         Thread.__init__(self, *init_args, **init_kwargs)
@@ -70,6 +72,7 @@ class MTRequestHandler:
         # use this to count the successful responsee from server. If all successed, this count will be equal to targets
         for trans_thread in TransThreadList:
             try:
+                # the translation is received HERE
                 res = trans_thread.join()
             except:
                 print("No response received.")
