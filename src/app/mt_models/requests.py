@@ -31,7 +31,8 @@ class MTRequestHandler:
     STATUS_OK = "SUCCESS"
     STATUS_ERROR = "ERROR"
 
-    async def translate(self, src: str, tgt: str, text: str):
+    def translate(self, src: str, tgt: str, text: str):
+        print(f"Received request for {src} to {tgt}")
         # Assume an error until proven successful!
         out = {'state': self.STATUS_ERROR, 'result': {}}
 
@@ -70,7 +71,7 @@ class MTRequestHandler:
 
         out['state'] = "OK"
         # use this to count the successful responsee from server. If all successed, this count will be equal to targets
-        for trans_thread in TransThreadList:
+        for tgt_lang_index, trans_thread in enumerate(TransThreadList):
             try:
                 # the translation is received HERE
                 res = trans_thread.join()
@@ -78,20 +79,20 @@ class MTRequestHandler:
                 print("No response received.")
                 continue
 
-        if self._is_valid_server_response(res):
-            # TODO: error handling?
-            translation_list = res.json()[0]
+            if self._is_valid_server_response(res):
+                # TODO: error handling?
+                translation_list = res.json()[0]
 
-            # Put together all the returned sentences into one string
-            target_output = self._combine_response_sentences(translation_list)
+                # Put together all the returned sentences into one string
+                target_output = self._combine_response_sentences(translation_list)
 
-            # Detokenize this returned output to make it more reader-friendly
-            detokenized_target_output = self._detokenize(target_output, tgt)
+                # Detokenize this returned output to make it more reader-friendly
+                detokenized_target_output = self._detokenize(target_output, tgt)
 
-            # Save the resulting translation to the response
-            out['result'][target_langs[i]] = detokenized_target_output
-            out['state'] = self.STATUS_OK
-
+                # Save the resulting translation to the response
+                out['result'][target_langs[tgt_lang_index]] = detokenized_target_output
+        out['state'] = self.STATUS_OK
+        print(out)
         return out
 
     def get_available_languages(self):

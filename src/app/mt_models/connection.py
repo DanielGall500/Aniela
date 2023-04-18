@@ -30,11 +30,11 @@ class MTServerConnection:
     async def translate(self, source, target, text):
         translation = await self.request_handler.translate(source, target, text)
 
-    async def connect_to_all(self):
+    def connect_to_all(self):
         language_pairs = model_info.get_all_languages_pairs()
         for pair in language_pairs:
             src, tgt = pair 
-            await self.connect_to(src,tgt)
+            self.connect_to(src,tgt)
         return self.all_as_dict()
 
     async def connect_to(self, src: str, tgt: str) -> bool:
@@ -57,7 +57,7 @@ class MTServerConnection:
             # Ensure an OK status is received when connecting to a particular model
             translation_test_input = model_translation_test[src]
             start_time = time.time()
-            translation_test_response = await self.request_handler.translate(src, tgt, translation_test_input)
+            translation_test_response = self.request_handler.translate(src, tgt, translation_test_input)
             translation_test_time = round(time.time() - start_time, 4)
             print("Response received...")
 
