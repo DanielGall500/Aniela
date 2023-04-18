@@ -1,22 +1,6 @@
 import uvicorn
 from dotenv import dotenv_values
 
-"""
-TODO
-- add UI to the status page
-- set up stress tests for the web API 
-- allow anyone with appropriate login credentials to restart the web server. Would be great if this could be the done for the MT servers too.
-- ensure that proper threading is in place to handle a lot of requests at once
-- eventually, it would be great to create a report with a direct comparison between the two implementations and add this to the Github
-as well as your Upwork profile.
-- making request posts async
-
-
-- the ports are currently incorrect on the MT servers so thats not working
-- why wouldn't the documentation load?
-- how can I set this computer as what's connected to the domain link? Some domain change needed?
-"""
-
 # URL to which the tests should be sending requests
 # This is the URL of the web server and not the MT servers
 config_app = dotenv_values('app/.env')
