@@ -31,7 +31,7 @@ password_v1 = env_config["PASSWORD_V1"]
 password_v2 = env_config["PASSWORD_V2"]
 
 # which version of the platform are we testing
-IS_VERSION_TWO = False
+IS_VERSION_TWO = True
 
 #URL variables
 domain = "https://mt.computing.dcu.ie"
@@ -62,7 +62,7 @@ def get_token():
 token = get_token()
 
 class QuickstartUser(HttpUser):
-    wait_time = between(1, 5)
+    wait_time = between(1, 2)
 
     def on_start(self):
         self.client.headers['Content-Type'] = 'application/json'

@@ -7,6 +7,6 @@ COPY ./requirements.txt /code/requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
 COPY ./gunicorn_start.sh /code/gunicorn_start.sh
-COPY ./src/app /code/app
+COPY ./app /code/app
 
 CMD ["sh", "gunicorn_start.sh"]
