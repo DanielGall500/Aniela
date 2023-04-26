@@ -43,7 +43,7 @@ mt_server_connection = MTServerConnection()
 @app.post("/translate", dependencies=[Depends(JWTBearer())], response_model=TranslateResponse, 
     tags=["Translation Calls"], status_code=status.HTTP_201_CREATED,
     description="Submit a translation request to the API. A JSON web token must be provided in the header which is given to you once you log in.") 
-async def translate(request: TranslateRequest):
+def translate(request: TranslateRequest):
     # set up the translation
     source = request.src
     target = request.tgt
@@ -74,6 +74,7 @@ async def login(request: LoginDetails):
 @app.get("/dashboard", response_class=HTMLResponse, 
     description="Check the status of each of the language models", tags=["Maintenance & Testing"])
 async def status(request: Request):
+    # formerly await
     mt_server_connection.connect_to_all()
     as_dict = mt_server_connection.all_as_dict()
     # return templates.TemplateResponse("model_status.html", {"request": request, "connections": as_dict})
