@@ -1,6 +1,7 @@
 from sacremoses import MosesTokenizer, MosesPunctNormalizer, MosesDetokenizer
 from app.mt_models.information import model_info
 from threading import Thread
+from loguru import logger
 import nltk
 import requests
 
@@ -137,10 +138,9 @@ class MTRequestHandler:
         target_output = " ".join(target_sentence["tgt"] for target_sentence in target_sentences)
         return target_output
 
-    def _log_info(self, src: str, tgt: str, text: str, pre_processed: str, state: str):
-        print("-- New Translation --")
-        print(f"source: {src}, target: {tgt}")
-        print(f"Input: {text}")
-        print(f'Pre-processed: {pre_processed}')
-        print(f'Current state: {state}')
-        print("----")
+    def _log_info(self, src: str, tgt: str, text: str):
+        logger.debug("-- New Translation --")
+        logger.debug(f"source: {src}, target: {tgt}")
+        logger.debug(f"Input: {text}")
+        logger.debug(f"Output: {text}")
+        logger.debug("----")
