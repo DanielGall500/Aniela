@@ -2,7 +2,7 @@ import sqlite3
 import numpy
 from dotenv import dotenv_values
 
-db = sqlite3.connect("app/database_newest.sqlite")
+db = sqlite3.connect("app/database.sqlite")
 cursor = db.cursor()
 
 # -- JWT Configuration Variables --
@@ -70,11 +70,11 @@ class MTModelInformation:
         except Exception:
             return None, None 
 
-        print("----")
-        print("IP & Port found for " + src + "," + tgt)
-        print(server_ip)
-        print(server_port)
-        print("----")
+        # print("----")
+        # print("IP & Port found for " + src + "," + tgt)
+        # print(server_ip)
+        # print(server_port)
+        # print("----")
 
         return str(server_ip), int(server_port)
 

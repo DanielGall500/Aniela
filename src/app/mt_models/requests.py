@@ -32,7 +32,7 @@ class MTRequestHandler:
     STATUS_ERROR = "ERROR"
 
     def translate(self, src: str, tgt: str, text: str):
-        print(f"Received request for {src} to {tgt}")
+        # print(f"Received request for {src} to {tgt}")
         # Assume an error until proven successful!
         out = {'state': self.STATUS_ERROR, 'result': {}}
 
@@ -92,7 +92,7 @@ class MTRequestHandler:
                 # Save the resulting translation to the response
                 out['result'][target_langs[tgt_lang_index]] = detokenized_target_output
         out['state'] = self.STATUS_OK
-        print(out)
+        # print(out)
         return out
 
     def get_available_languages(self):

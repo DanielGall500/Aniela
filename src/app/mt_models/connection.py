@@ -27,17 +27,20 @@ class MTServerConnection:
             connection_view += "\n"
         return connection_view
 
-    async def translate(self, source, target, text):
-        translation = await self.request_handler.translate(source, target, text)
+    # async def translate(self, source, target, text):
+     #   translation = await self.request_handler.translate(source, target, text)
 
+    # formerly await
     def connect_to_all(self):
         language_pairs = model_info.get_all_languages_pairs()
         for pair in language_pairs:
             src, tgt = pair 
+            # formerly await
             self.connect_to(src,tgt)
         return self.all_as_dict()
 
-    async def connect_to(self, src: str, tgt: str) -> bool:
+    # formerly await
+    def connect_to(self, src: str, tgt: str) -> bool:
         lang_pair_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         translation_test_input = ""
         translation_test_output = ""
@@ -57,13 +60,14 @@ class MTServerConnection:
             # Ensure an OK status is received when connecting to a particular model
             translation_test_input = model_translation_test[src]
             start_time = time.time()
+            # formerly await
             translation_test_response = self.request_handler.translate(src, tgt, translation_test_input)
             translation_test_time = round(time.time() - start_time, 4)
-            print("Response received...")
+            # print("Response received...")
 
             translation_test_output = translation_test_response["result"]
             is_model_available = translation_test_response["state"] == self.request_handler.STATUS_OK
-            print(is_model_available)
+            # print(is_model_available)
         except socket.error:
             is_model_available = False
 
