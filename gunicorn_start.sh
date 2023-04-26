@@ -1,7 +1,7 @@
 #!/bin/bash
 
 NAME=translate-api
-DIR=/home/dg/Documents/TranslateAPI
+DIR=~/TranslateAPI
 USER=dg
 GROUP=dg
 WORKERS=16 # 2 x cores (16) + 1
