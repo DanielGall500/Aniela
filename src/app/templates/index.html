@@ -31,13 +31,13 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Material Design Lite">
-    <link rel="apple-touch-icon-precomposed" href="{{ url_for('static', path='images/ios-desktop.jpg') }}">
+    <link rel="apple-touch-icon-precomposed" href="{{ url_for('static', path='images/adapt-logo.jpg') }}">
 
     <!-- Tile icon for Win8 (144x144 + tile color) -->
     <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
     <meta name="msapplication-TileColor" content="#3372DF">
 
-    <link rel="shortcut icon" href="{{ url_for('static', path='images/favicon.jpg') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', path='images/adapt-logo.jpg') }}">
 
     <!-- SEO: If your mobile URL is different from the desktop URL, add a canonical link to the desktop page https://developers.google.com/webmasters/smartphone-sites/feature-phones -->
     <!--
@@ -72,13 +72,14 @@
           <img src="{{ url_for('static', path='images/adapt-logo.png')}}" class="demo-avatar">
           <br>
           <span class="mdl-layout-title">Adapt Translation API</span>
-          <span class="mdl-layout-title">Dublin City University</span>
         </header>
         <nav class="demo-navigation mdl-navigation mdl-color--blue-grey-800">
           <a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">home</i>Home</a>
           <a class="mdl-navigation__link" href="dashboard/docs"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">forum</i>Docs</a>
           <a class="mdl-navigation__link" href="dashboard/about"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">people</i>About</a>
         </nav>
+        <img src="{{ url_for('static', path='images/DCU-logo.png')}}" class="demo-avatar">
+        <span class="mdl-layout-subtitle">Dublin City University</span>
       </div>
 
       <main class="card-layout mdl-layout__content mdl-color--grey-100">
