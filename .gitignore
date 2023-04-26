@@ -1,3 +1,6 @@
+# Documents
+report/
+
 # Databases
 *.sqlite
 *.db
