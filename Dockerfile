@@ -6,6 +6,7 @@ COPY ./requirements.txt /code/requirements.txt
 
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
+COPY ./gunicorn_start.sh /code/gunicorn_start.sh
 COPY ./src/app /code/app
 
-CMD ["uvicorn", "app.api:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["sh", "gunicorn_start.sh"]
