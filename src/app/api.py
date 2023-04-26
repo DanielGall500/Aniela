@@ -7,6 +7,7 @@ from app.auth.auth_bearer import JWTBearer, signJWT
 from app.mt_models.connection import MTRequestHandler
 from fastapi.templating import Jinja2Templates
 from app.mt_models.connection import MTServerConnection
+from loguru import logger
 
 app = FastAPI(
     title="Adapt Translation API",
@@ -48,6 +49,11 @@ def translate(request: TranslateRequest):
     source = request.src
     target = request.tgt
     text = request.text
+
+    logger.debug("----")
+    logger.debug("Request Received: {}-{}", source, target)
+    logger.debug("Text: {}", text)
+
     translation = mt_request_handler.translate(source, target, text)
 
     # create the translation response
@@ -55,6 +61,9 @@ def translate(request: TranslateRequest):
     response.username = "Unknown"
     response.status = translation["state"] 
     response.result = translation["result"]
+
+    logger.debug("Result: {}", response.result)
+
     return response
 
 @app.post("/login", status_code=status.HTTP_201_CREATED, tags=["User Authentication"],
@@ -66,23 +75,26 @@ async def login(request: LoginDetails):
     user_authentication = authenticate_user(username, password_attempt)
     if user_authentication["validated"]:
         token = signJWT(username)
+        logger.debug("{} logged in.", username)
         return { "token": token }
     else:
         return user_authentication
 
 # -- Translation API Dashboard Endpoints --
 @app.get("/dashboard", response_class=HTMLResponse, 
-    description="Check the status of each of the language models", tags=["Maintenance & Testing"])
+    description="Check the status of each of the language models", include_in_schema=False, tags=["Maintenance & Testing"])
 async def status(request: Request):
     # formerly await
     mt_server_connection.connect_to_all()
     as_dict = mt_server_connection.all_as_dict()
+    logger.debug("Dashboard accessed.")
     # return templates.TemplateResponse("model_status.html", {"request": request, "connections": as_dict})
     return templates.TemplateResponse("index.html", {"request": request, "connections": as_dict})
 
 @app.get("/dashboard/about", response_class=HTMLResponse, 
-    description="Check the status of each of the language models", tags=["Maintenance & Testing"])
+    description="Check the status of each of the language models", include_in_schema=False, tags=["Maintenance & Testing"])
 async def status(request: Request):
+    logger.debug("About page accessed.")
     return templates.TemplateResponse("about.html", {"request": request})
 
 @app.get("/", include_in_schema=False, tags=["Maintenance & Testing"])
