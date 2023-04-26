@@ -82,8 +82,8 @@ async def login(request: LoginDetails):
 
 # -- Translation API Dashboard Endpoints --
 @app.get("/dashboard", response_class=HTMLResponse, 
-    description="Check the status of each of the language models", include_in_schema=False, tags=["Maintenance & Testing"])
-async def status(request: Request):
+    description="Check the status of each of the language models", tags=["Maintenance & Testing"])
+async def dashboard(request: Request):
     # formerly await
     mt_server_connection.connect_to_all()
     as_dict = mt_server_connection.all_as_dict()
@@ -93,7 +93,7 @@ async def status(request: Request):
 
 @app.get("/dashboard/about", response_class=HTMLResponse, 
     description="Check the status of each of the language models", include_in_schema=False, tags=["Maintenance & Testing"])
-async def status(request: Request):
+async def about(request: Request):
     logger.debug("About page accessed.")
     return templates.TemplateResponse("about.html", {"request": request})
 
