@@ -61,14 +61,13 @@ class MTServerConnection:
             # Ensure an OK status is received when connecting to a particular model
             translation_test_input = model_translation_test[src]
             start_time = time.time()
-            # formerly await
+
             translation_test_response = self.request_handler.translate(src, tgt, translation_test_input)
             translation_test_time = round(time.time() - start_time, 4)
-            # print("Response received...")
 
             translation_test_output = translation_test_response["result"]
             is_model_available = translation_test_response["state"] == self.request_handler.STATUS_OK
-            # print(is_model_available)
+            logger.debug(f"Model Available: {is_model_available}")
         except socket.error:
             is_model_available = False
 
