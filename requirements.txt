@@ -50,7 +50,6 @@ nvidia-cudnn-cu11==8.5.0.96
 oauthlib==3.2.2
 packaging==23.1
 pandas==2.0.1
-passlib==1.7.4
 pluggy==1.0.0
 portalocker==2.7.0
 protobuf==4.22.0
