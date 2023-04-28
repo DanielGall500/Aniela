@@ -73,7 +73,7 @@ The project is built using Python 3.10 and FastAPI, an asynchronous framework fo
 * Server Configuration (SQLite)
     * The server configuration, that is, a table which provides the server name, model ID, and GPU to use for each MT model, is stored in a SQLite database and loaded using ```pysqlite3```, which is then loaded into a Python dictionary upon server startup. Further work on this project would take greater advantage of the features that comes with using SQLite.
 * Preprocessing (Sacremoses)
-    * Each translation request includes text which must be translation, and this text requires some pre-processing. We decided to handle this on the API side to reduce the load for the translation servers. Tokenization was carried out using ```sacremoses```, a popular tool for language tokenization.
+    * Each translation request includes text which must be translated, and this text requires some pre-processing. We decided to handle this on the API side to reduce the load for the translation servers. Tokenization was carried out using ```sacremoses```, a popular tool for language tokenization.
 * User Verification (Argon2, JWT)
     * Password creation and authentication uses Argon2 password hashing. Through the ```/login``` endpoint users can verify their authenticity and receive a JSON web token (handled by ```pyjwt```) which then must included in the headers of any translation request made to the server.
 
