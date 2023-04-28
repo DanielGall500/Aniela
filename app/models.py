@@ -10,6 +10,6 @@ class TranslateRequest(BaseModel):
     text: str = Field(description="The text which you want to translate.")
 
 class TranslateResponse(BaseModel):
-    username: str = Field("John Doe")
-    status: str = Field("SUCCESS")
+    username: str = Field("John Doe", description="The user who sent the original request.")
+    status: str = Field("SUCCESS", description="The return status of the request - either SUCCESS or ERROR.")
     result: dict = {}
