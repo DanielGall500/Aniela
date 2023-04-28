@@ -8,6 +8,10 @@ report/
 # Local files
 local_users.txt
 
+# Other
+Pipfile
+Pipfile.lock
+
 # MT Test Servers
 mt_server/
 
