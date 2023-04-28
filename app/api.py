@@ -7,6 +7,7 @@ from app.auth.auth_bearer import JWTBearer, signJWT
 from app.mt_models.connection import MTRequestHandler
 from fastapi.templating import Jinja2Templates
 from app.mt_models.connection import MTServerConnection
+import time
 from loguru import logger
 
 app = FastAPI(
@@ -54,7 +55,9 @@ def translate(request: TranslateRequest):
     logger.debug("Request Received: {}-{}", source, target)
     logger.debug("Text: {}", text)
 
+    start_time = time.time()
     translation = mt_request_handler.translate(source, target, text)
+    latency_time = round(time.time() - start_time, 4)
 
     # create the translation response
     response = TranslateResponse()
@@ -63,6 +66,8 @@ def translate(request: TranslateRequest):
     response.result = translation["result"]
 
     logger.debug("Result: {}", response.result)
+    logger.debug("Latency: {}", latency_time)
+    logger.debug("\n")
 
     return response
 
