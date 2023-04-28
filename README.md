@@ -83,9 +83,7 @@ The project is built using Python 3.10 and FastAPI, an asynchronous framework fo
 
 <!-- GETTING STARTED -->
 ## Getting Started
-
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+To get a local copy up and running follow the following steps. On the initial setup, the dashboard should note all MT models as ```offline``` before you have properly configured the MT servers.
 
 # Installation 
 With only a few steps, you can run this API for yourself and connect it to the servers where your MT models are being hosted. For our use case, we were connecting to the built-in OpenNMT MT server.
@@ -95,7 +93,7 @@ With only a few steps, you can run this API for yourself and connect it to the s
    git clone https://github.com/DanielGall500/TranslateAPI.git
    ```
 
-2. Set up environment variables
+2. Set up environment variables<br>
 This API requires the user to set up a number of environment variables to be set up in ```app/.env``` which are loaded using the Python ```dotenv``` package. These variables will reference each machine translation server where the models are being hosted, as well as the secret key and algorithm for the creation and decoding of JSON web tokens (JWTs). 
 The server names must match those contained within the server setup SQLite database. For instance, if our translation models are listed as using servers EUCOM_A, EUCOM_B, and EUCOM_C in the database, it must be listed like so in the environment variables.
 
@@ -113,7 +111,7 @@ The server names must match those contained within the server setup SQLite datab
     JWT_ALGORITHM=HS256
     ```
 
-3. Create a Docker image and container
+3. Create a Docker image and container<br>
 Once you have set up your environment variables and a SQLite database, you can run this project using Docker.
 
     ```dockerfile
@@ -137,7 +135,6 @@ An image and container can be created and run using the following commands:
     sudo docker build -t api-image .
     sudo docker run -d --name api-container -p 8080:80 eucom-api-image
     ```
-
 
 This will connect Docker's internal port 80 to our external port 8080. The latter port is the one which you will be concerned with, as the other is setup automatically in the ```gunicorn_start.sh``` file.
 
