@@ -70,6 +70,12 @@ class MTModelInformation:
         except Exception:
             return None, None 
 
+        # print("----")
+        # print("IP & Port found for " + src + "," + tgt)
+        # print(server_ip)
+        # print(server_port)
+        # print("----")
+
         return str(server_ip), int(server_port)
 
     def _contains_language_pair(self, src: str, tgt: str):
