@@ -84,11 +84,9 @@ async def login(request: LoginDetails):
 @app.get("/dashboard", response_class=HTMLResponse, 
     description="Check the status of each of the language models", tags=["Maintenance & Testing"])
 async def dashboard(request: Request):
-    # formerly await
+    logger.debug("Dashboard accessed.")
     mt_server_connection.connect_to_all()
     as_dict = mt_server_connection.all_as_dict()
-    logger.debug("Dashboard accessed.")
-    # return templates.TemplateResponse("model_status.html", {"request": request, "connections": as_dict})
     return templates.TemplateResponse("index.html", {"request": request, "connections": as_dict})
 
 @app.get("/dashboard/about", response_class=HTMLResponse, 

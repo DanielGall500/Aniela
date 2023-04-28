@@ -69,6 +69,7 @@
       </header>
       <div class="demo-drawer mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
         <header class="demo-drawer-header">
+          <img src="{{ url_for('static', path='images/adapt-logo.png')}}" class="demo-avatar" style="max-width:100%; max-height:100%;">
           <br>
           <span class="mdl-layout-title">Adapt Translation API</span>
         </header>
@@ -94,7 +95,7 @@
                           <p>Output: {{ connections[key]["output"] }}</p>
                           <p>Time (s): {{ connections[key]["time"] }}s</p>
                       {% else %}
-                          <p style="color: red">Offline</p>
+                          <p style="color: red">Connection timed out.</p>
                       {% endif %}
                   </div>
                 </div>

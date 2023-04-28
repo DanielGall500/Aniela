@@ -1,6 +1,7 @@
 import sqlite3
 import numpy
 from dotenv import dotenv_values
+from loguru import logger
 
 db = sqlite3.connect("app/database.sqlite")
 cursor = db.cursor()
@@ -12,16 +13,16 @@ def get_server_IP_from_config(server: str) -> str:
     try:
         server_ip = str(app_config[f"{server}_IP"])
     except Exception as e:
-        print(f"Server {server} not found.")
-        print(e)
+        logger.debug(f"Server {server} not found.")
+        logger.debug(e)
     return str(server_ip)
 
 def get_server_port_from_config(server: str) -> int:
     try:
         server_port = app_config[f"{server}_PORT"]
     except Exception as e:
-        print(f"Server {server} not found.")
-        print(e)
+        logger.debug(f"Server {server} not found.")
+        logger.debug(e)
     return int(server_port)
 
 # -- Translation Model Information --
@@ -39,8 +40,8 @@ class MTModelInformation:
         try:
             server_data = cursor.execute(get_server_data).fetchall()
         except Exception as e:
-            print("Invalid SQL Database for Server Data")
-            print(e)
+            logger.debug("Connection to database not successful.")
+            raise Exception("Invalid SQL Database for Server Data. Did you provide the right DB path?")
 
         for src, tgt, server, id in server_data:
             # ensure that the mult-dimensional dictionary is 

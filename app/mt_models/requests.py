@@ -32,7 +32,7 @@ class MTRequestHandler:
     STATUS_OK = "SUCCESS"
     STATUS_ERROR = "ERROR"
 
-    def translate(self, src: str, tgt: str, text: str):
+    def translate(self, src: str, tgt: str, text: str, timeout: float = None):
         # print(f"Received request for {src} to {tgt}")
         # Assume an error until proven successful!
         out = {'state': self.STATUS_ERROR, 'result': {}}
@@ -64,7 +64,7 @@ class MTRequestHandler:
             # Associate each input sentence with the appropriate MT model 
             tokenized_sentences = [{'src': sentence, 'id': model_id} for sentence in tokenize_input]
 
-            trans_thread = ThreadWithReturnValue(target=requests.post, args=(model_server_endpoint), kwargs={'json': tokenized_sentences})
+            trans_thread = ThreadWithReturnValue(target=requests.post, args=(model_server_endpoint), kwargs={'json': tokenized_sentences, 'timeout': timeout})
             TransThreadList.append(trans_thread)
             trans_thread.start()
 
@@ -77,11 +77,10 @@ class MTRequestHandler:
                 # the translation is received HERE
                 res = trans_thread.join()
             except:
-                print("No response received.")
+                logger.debug(f"No response received from translation server for model {model_id}.")
                 continue
 
             if self._is_valid_server_response(res):
-                # TODO: error handling?
                 translation_list = res.json()[0]
 
                 # Put together all the returned sentences into one string
@@ -93,17 +92,19 @@ class MTRequestHandler:
                 # Save the resulting translation to the response
                 out['result'][target_langs[tgt_lang_index]] = detokenized_target_output
         out['state'] = self.STATUS_OK
-        # print(out)
         return out
 
     def get_available_languages(self):
         return model_info.get_all_languages()
 
     def _tokenize(self, src_text: str, src_lang: str):
+        # retrieve the tokenizer for a specific language
         mt = self.moses_tokenizers.get(src_lang, None)
+
         if not mt:
             mt = MosesTokenizer(lang=src_lang)
             self.moses_tokenizers[src_lang] = mt
+
         sentence_list = []
         # first split lines by \n , so to keep the format of the original
         lines = src_text.splitlines()  # first split with \n
@@ -115,8 +116,6 @@ class MTRequestHandler:
                 sent_normalized = self.mpn.normalize(sent)
                 sent_tokenized = mt.tokenize(sent_normalized, return_str=True)
                 sentence_list.append(sent_tokenized)
-            # TODO: consider the \n in the input text. So to keep the original format
-            # sentence_list.append('\n')  # use \n to keep original input format
         return sentence_list
 
     def _detokenize(self, tgt_sents: str, tgt_lang: str):

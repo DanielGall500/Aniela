@@ -1,5 +1,6 @@
 from app.mt_models.information import model_info
 from app.mt_models.requests import MTRequestHandler
+from loguru import logger
 import socket
 import time
 
@@ -49,12 +50,12 @@ class MTServerConnection:
         try:
             server_ip, server_port = model_info.get_language_pair_server_IP_and_port(src,tgt)
 
-            print("Checking server for " + src + "," + tgt)
-            print("Located at " + str(server_ip) + ":" + str(server_port))
+            logger.debug("Checking server for " + src + "," + tgt)
+            logger.debug("Located at " + str(server_ip) + ":" + str(server_port))
             connection_result = lang_pair_socket.connect_ex((server_ip, server_port))
-            print("Connected...")
+            logger.debug("Connected...")
             if connection_result != 0: 
-                print("Error")
+                logger.debug("Error")
                 raise socket.error()
 
             # Ensure an OK status is received when connecting to a particular model
