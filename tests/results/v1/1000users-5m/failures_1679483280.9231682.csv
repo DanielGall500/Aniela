@@ -1,5 +1,0 @@
-Method,Name,Error,Occurrences
-POST,Login Task,HTTPError('502 Server Error: Proxy Error for url: Login Task'),103
-POST,Login Task,"ConnectionResetError(104, 'Connection reset by peer')",59
-POST,Login Task,"ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x....>, 'Connection to mt.computing.dcu.ie timed out. (connect timeout=None)')",514
-POST,Login Task,HTTPError('503 Server Error: Service Unavailable for url: Login Task'),1
