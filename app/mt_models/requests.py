@@ -77,7 +77,6 @@ class MTRequestHandler:
                 res = trans_thread.join()
             except:
                 logger.debug(f"No response received from translation server for model {model_id}.")
-                return out
 
             if self._is_valid_server_response(res):
                 translation_list = res.json()[0]
@@ -90,6 +89,9 @@ class MTRequestHandler:
 
                 # Save the resulting translation to the response
                 out['result'][target_langs[tgt_lang_index]] = detokenized_target_output
+            else:
+                out['state'] = self.STATUS_ERROR
+                return out
         out['state'] = self.STATUS_OK
         return out
 
