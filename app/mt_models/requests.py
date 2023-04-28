@@ -70,7 +70,6 @@ class MTRequestHandler:
 
             # response = self._send_request_to_MT_server(model_server_endpoint, tokenized_sentences)
 
-        out['state'] = "OK"
         # use this to count the successful responsee from server. If all successed, this count will be equal to targets
         for tgt_lang_index, trans_thread in enumerate(TransThreadList):
             try:
@@ -78,7 +77,7 @@ class MTRequestHandler:
                 res = trans_thread.join()
             except:
                 logger.debug(f"No response received from translation server for model {model_id}.")
-                continue
+                return out
 
             if self._is_valid_server_response(res):
                 translation_list = res.json()[0]
