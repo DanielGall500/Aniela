@@ -131,10 +131,8 @@ Once you have set up your environment variables and a SQLite database, you can r
 
 An image and container can be created and run using the following commands: 
 
-    ```bash
-    sudo docker build -t api-image .
-    sudo docker run -d --name api-container -p 8080:80 eucom-api-image
-    ```
+    docker build -t api-image .
+    docker run -d --name api-container -p 8080:80 eucom-api-image
 
 This will connect Docker's internal port 80 to our external port 8080. The latter port is the one which you will be concerned with, as the other is setup automatically in the ```gunicorn_start.sh``` file.
 
