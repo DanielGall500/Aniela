@@ -86,11 +86,15 @@ def store_translation(source, target, src_input, tgt_output, latency):
     store_translation_query = f"""INSERT INTO translations
                         (time, source, target, input, output, latency) 
                         VALUES 
-                        ({datetime.now()},{source},{target},{src_input},{tgt_output},{latency})"""
+                        ({datetime.now()},{source},{target},{src_input},{tgt_output},{latency});"""
+    logger.debug(store_translation_query)
+    logger.debug(cursor.execute("SELECT * FROM translations"))
 
     try:
-        cursor.execute(store_translation_query)
+        exec = cursor.execute(store_translation_query)
+        logger.debug(exec)
         db_connection.commit()
+        logger.debug("Finished!")
     except sqlite3.Error as error:
         logger.error("Failed to store translation data.")
         logger.error(error)
