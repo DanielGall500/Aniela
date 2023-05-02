@@ -87,14 +87,9 @@ def store_translation(source, target, src_input, tgt_output, latency):
                         (time, source, target, input, output, latency) 
                         VALUES 
                         ("{datetime.now()}","{source}","{target}","{src_input}","{tgt_output}","{latency}");"""
-    logger.debug(store_translation_query)
-    logger.debug(cursor.execute("SELECT * FROM translations"))
-
     try:
-        exec = cursor.execute(store_translation_query)
-        logger.debug(exec)
+        cursor.execute(store_translation_query)
         db_connection.commit()
-        logger.debug("Finished!")
     except sqlite3.Error as error:
         logger.error("Failed to store translation data.")
         logger.error(error)
