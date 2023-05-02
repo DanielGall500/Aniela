@@ -42,7 +42,7 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
 logger.add("logs/translate-api.log", rotation="1 day")
 
-db_connection = sqlite3.connect("database.sqlite")
+db_connection = sqlite3.connect("database.sqlite", check_same_thread=False)
 cursor = db_connection.cursor()
 
 mt_request_handler = MTRequestHandler()
