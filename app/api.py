@@ -7,8 +7,10 @@ from app.auth.auth_bearer import JWTBearer, signJWT
 from app.mt_models.connection import MTRequestHandler
 from fastapi.templating import Jinja2Templates
 from app.mt_models.connection import MTServerConnection
-import time
 from loguru import logger
+from datetime import datetime
+import sqlite3
+import time
 
 app = FastAPI(
     title="Adapt Translation API",
@@ -40,6 +42,9 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
 logger.add("logs/translate-api.log", rotation="1 day")
 
+db_connection = sqlite3.connect("database.sqlite")
+cursor = db_connection.cursor()
+
 mt_request_handler = MTRequestHandler()
 mt_server_connection = MTServerConnection()
 
@@ -68,11 +73,28 @@ def translate(request: TranslateRequest):
     if response.status == mt_request_handler.STATUS_OK:
         logger.success("Result: {}", response.result)
         logger.success("Latency: {}", latency_time)
+
+        store_translation(source, target, text, response.result, latency_time)
+
     else:
         logger.error("Translation unsuccessful.")
     logger.info("\n")
 
     return response
+
+def store_translation(source, target, src_input, tgt_output, latency):
+    store_translation_query = f"""INSERT INTO translations
+                        (time, source, target, input, output, latency) 
+                        VALUES 
+                        ({datetime.now()},{source},{target},{src_input},{tgt_output},{latency})"""
+
+    try:
+        cursor.execute(store_translation_query)
+        db_connection.commit()
+    except sqlite3.Error as error:
+        logger.error("Failed to store translation data.")
+        logger.error(error)
+
 
 @app.post("/login", status_code=status.HTTP_201_CREATED, tags=["User Authentication"],
     description="Log in using your username and password in order to receive a JWT.")
