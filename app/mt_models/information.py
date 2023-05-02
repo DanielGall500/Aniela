@@ -13,16 +13,16 @@ def get_server_IP_from_config(server: str) -> str:
     try:
         server_ip = str(app_config[f"{server}_IP"])
     except Exception as e:
-        logger.debug(f"Server {server} not found.")
-        logger.debug(e)
+        logger.error(f"Server {server} not found.")
+        logger.error(e)
     return str(server_ip)
 
 def get_server_port_from_config(server: str) -> int:
     try:
         server_port = app_config[f"{server}_PORT"]
     except Exception as e:
-        logger.debug(f"Server {server} not found.")
-        logger.debug(e)
+        logger.error(f"Server {server} not found.")
+        logger.error(e)
     return int(server_port)
 
 # -- Translation Model Information --
@@ -40,8 +40,8 @@ class MTModelInformation:
         try:
             server_data = cursor.execute(get_server_data).fetchall()
         except Exception as e:
-            logger.debug("Connection to database not successful.")
-            raise Exception("Invalid SQL Database for Server Data. Did you provide the right DB path?")
+            logger.error("Connection to database not successful. Did you provide the correct DB path?")
+            raise Exception("Invalid SQL Database for Server Data.")
 
         for src, tgt, server, id in server_data:
             # ensure that the mult-dimensional dictionary is 

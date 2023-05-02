@@ -38,6 +38,7 @@ app = FastAPI(
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
+logger.add("logs/translate-api.log", rotation="1 day")
 
 mt_request_handler = MTRequestHandler()
 mt_server_connection = MTServerConnection()
@@ -51,9 +52,8 @@ def translate(request: TranslateRequest):
     target = request.tgt
     text = request.text
 
-    logger.debug("----")
-    logger.debug("Request Received: {}-{}", source, target)
-    logger.debug("Text: {}", text)
+    logger.info("Translation Request: {}-{}", source, target)
+    logger.info("Text: {}", text)
 
     start_time = time.time()
     translation = mt_request_handler.translate(source, target, text)
@@ -65,9 +65,12 @@ def translate(request: TranslateRequest):
     response.status = translation["state"] 
     response.result = translation["result"]
 
-    logger.debug("Result: {}", response.result)
-    logger.debug("Latency: {}", latency_time)
-    logger.debug("\n")
+    if response.status == mt_request_handler.STATUS_OK:
+        logger.success("Result: {}", response.result)
+        logger.success("Latency: {}", latency_time)
+    else:
+        logger.error("Translation unsuccessful.")
+    logger.info("\n")
 
     return response
 
@@ -80,16 +83,17 @@ async def login(request: LoginDetails):
     user_authentication = authenticate_user(username, password_attempt)
     if user_authentication["validated"]:
         token = signJWT(username)
-        logger.debug("{} logged in.", username)
+        logger.success("{} logged in.", username)
         return { "token": token }
     else:
+        logger.warning("Invalid login from {} with password {}", username, password_attempt)
         return user_authentication
 
 # -- Translation API Dashboard Endpoints --
 @app.get("/dashboard", response_class=HTMLResponse, 
     description="Check the status of each of the language models", tags=["Maintenance & Testing"])
 async def dashboard(request: Request):
-    logger.debug("Dashboard accessed.")
+    logger.info("Dashboard accessed.")
     mt_server_connection.connect_to_all()
     as_dict = mt_server_connection.all_as_dict()
     return templates.TemplateResponse("index.html", {"request": request, "connections": as_dict})
@@ -97,7 +101,7 @@ async def dashboard(request: Request):
 @app.get("/dashboard/about", response_class=HTMLResponse, 
     description="Check the status of each of the language models", include_in_schema=False, tags=["Maintenance & Testing"])
 async def about(request: Request):
-    logger.debug("About page accessed.")
+    logger.info("About page accessed.")
     return templates.TemplateResponse("about.html", {"request": request})
 
 @app.get("/", include_in_schema=False, tags=["Maintenance & Testing"])

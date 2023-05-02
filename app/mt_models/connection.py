@@ -28,10 +28,6 @@ class MTServerConnection:
             connection_view += "\n"
         return connection_view
 
-    # async def translate(self, source, target, text):
-     #   translation = await self.request_handler.translate(source, target, text)
-
-    # formerly await
     def connect_to_all(self):
         language_pairs = model_info.get_all_languages_pairs()
         for pair in language_pairs:
@@ -40,7 +36,6 @@ class MTServerConnection:
             self.connect_to(src,tgt)
         return self.all_as_dict()
 
-    # formerly await
     def connect_to(self, src: str, tgt: str) -> bool:
         lang_pair_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         translation_test_input = ""
@@ -49,14 +44,15 @@ class MTServerConnection:
         
         try:
             server_ip, server_port = model_info.get_language_pair_server_IP_and_port(src,tgt)
-
-            logger.debug("Checking server for " + src + "," + tgt)
-            logger.debug("Located at " + str(server_ip) + ":" + str(server_port))
             connection_result = lang_pair_socket.connect_ex((server_ip, server_port))
-            logger.debug("Connected...")
+
+            logger.info("Attempting to establish connection to {}-{}", src, tgt)
+
             if connection_result != 0: 
-                logger.debug("Error")
+                logger.error("Connection to server was unsuccessful.")
                 raise socket.error()
+            else:
+                logger.success("Connection to {}:{} established.", server_ip, server_port)
 
             # Ensure an OK status is received when connecting to a particular model
             translation_test_input = model_translation_test[src]
@@ -67,7 +63,12 @@ class MTServerConnection:
 
             translation_test_output = translation_test_response["result"]
             is_model_available = translation_test_response["state"] == self.request_handler.STATUS_OK
-            logger.debug(f"Model Available: {is_model_available}")
+
+            if is_model_available:
+                logger.success("Connection to model {}-{} established.", src, tgt)
+            else:
+                logger.error("Connection to model {}-{} unsuccessful.", src, tgt)
+
         except socket.error:
             is_model_available = False
 

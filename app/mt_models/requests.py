@@ -76,7 +76,7 @@ class MTRequestHandler:
                 # the translation is received HERE
                 res = trans_thread.join()
             except:
-                logger.debug(f"No response received from translation server for model {model_id}.")
+                logger.error(f"No response received from translation server for model {model_id}.")
 
             if self._is_valid_server_response(res):
                 translation_list = res.json()[0]
@@ -139,8 +139,8 @@ class MTRequestHandler:
         return target_output
 
     def _log_info(self, src: str, tgt: str, text: str):
-        logger.debug("-- New Translation --")
-        logger.debug(f"source: {src}, target: {tgt}")
-        logger.debug(f"Input: {text}")
-        logger.debug(f"Output: {text}")
-        logger.debug("----")
+        logger.info("-- New Translation --")
+        logger.info(f"source: {src}, target: {tgt}")
+        logger.info(f"Input: {text}")
+        logger.info(f"Output: {text}")
+        logger.info("----")
