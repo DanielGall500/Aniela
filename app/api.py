@@ -83,12 +83,12 @@ def translate(request: TranslateRequest):
     return response
 
 def store_translation(source, target, src_input, tgt_output, latency):
-    store_translation_query = f"""INSERT INTO translations
-                        (time, source, target, input, output, latency) 
-                        VALUES 
-                        ("{datetime.now()}","{source}","{target}","{src_input}","{tgt_output}","{latency}");"""
+    store_translation_query = """INSERT INTO translations
+                            (time, source, target, input, output, latency) 
+                            VALUES 
+                            (?, ?, ?, ?, ?, ?);"""
     try:
-        cursor.execute(store_translation_query)
+        cursor.execute(store_translation_query, (datetime.now(), source, target, src_input, tgt_output, latency))
         db_connection.commit()
     except sqlite3.Error as error:
         logger.error("Failed to store translation data.")
