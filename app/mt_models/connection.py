@@ -5,12 +5,12 @@ import socket
 import time
 
 model_translation_test = {
-    "en": "Climate change",
-    "de": "Klimawandel",
-    "it": "Cambiamento climatico",
-    "fr": "Changement climatique",
-    "pl": "Zmiana climatu",
-    "ga": "Athrú aeráide"
+    "en": "Its major markets include Spain, Greece, Poland and Turkey.",
+    "de": "Zu den Hauptmärkten gehören Spanien, Griechenland, Polen und die Türkei.",
+    "it": "I suoi principali mercati includono Spagna, Grecia, Polonia e Turchia.",
+    "fr": "Ses principaux marchés sont l'Espagne, la Grèce, la Pologne et la Turquie.",
+    "pl": "Główne rynki zbytu to Hiszpania, Grecja, Polska i Turcja.",
+    "ga": "Áirítear ar a margaí móra an Spáinn, an Ghréig, an Pholainn agus an Tuirc."
 }
 
 class MTServerConnection:
