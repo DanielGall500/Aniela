@@ -78,7 +78,6 @@ def translate(request: TranslateRequest):
 
     else:
         logger.error("Translation unsuccessful.")
-    logger.info("\n")
 
     return response
 
@@ -88,7 +87,7 @@ def store_translation(source, target, src_input, tgt_output, latency):
                             VALUES 
                             (?, ?, ?, ?, ?, ?);"""
     try:
-        cursor.execute(store_translation_query, (datetime.now(), source, target, src_input, tgt_output, latency))
+        cursor.execute(store_translation_query, (datetime.now(), str(source), str(target), str(src_input), str(tgt_output), float(latency)))
         db_connection.commit()
     except sqlite3.Error as error:
         logger.error("Failed to store translation data.")
