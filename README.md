@@ -1,34 +1,24 @@
 <a name="readme-top"></a>
 
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
-
-
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/DanielGall500/TranslateAPI">
+  <a href="https://github.com/DanielGall500/Aniela">
     <img src="app/static/images/adapt-cover.jpg" alt="Logo" width="150" height="100">
   </a>
 
-<h3 align="center">ADAPT Translate API</h3>
+<h3 align="center">Aniela</h3>
 
   <p align="center">
-    A web API built to securely and efficiently handle requests between users and machine translation servers. 
+    A web API built to securely and efficiently handle requests between users and machine translation models. 
     <br />
-    <a href="https://github.com/DanielGall500/TranslateAPI/issues">Report Bug</a>
+    <a href="https://github.com/DanielGall500/Aniela/issues">Report Bug</a>
     ·
-    <a href="https://github.com/DanielGall500/TranslateAPI/issues">Request Feature</a>
+    <a href="https://github.com/DanielGall500/Aniela/issues">Request Feature</a>
   </p>
 </div>
 
@@ -64,10 +54,11 @@
 
 <!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
 
-TranslateAPI is an API built to securely and efficiently distribute translation requests among machine translation models, typically hosted on other servers. The API is built using Python 3.10 and implemented in FastAPI. This work was carried out at the [ADAPT Research Centre](https://www.adaptcentre.ie/) in Dublin City University for [EUComMeet](https://www.eucommeet.eu/objectives-activities-nutshell/), a completely open-source platform to facilitate discussions among EU citizens on important and current topics. It is currently in use for deliberations on the EUComMeet platform serving translation between six languages: English, German, French, Italian, Polish, and Irish. This API is complementary to earlier work carried out which has been recently published in MDPI Analytics ([Lohar et al, 2023](https://www.mdpi.com/2813-2203/2/2/22)).
+Wiczowa is an API built to securely and efficiently distribute translation requests among machine translation models, typically hosted on other servers. The API is built using Python 3.10 and implemented in FastAPI. This work was carried out at the [ADAPT Research Centre](https://www.adaptcentre.ie/) in Dublin City University for [EUComMeet](https://www.eucommeet.eu/objectives-activities-nutshell/), a completely open-source platform to facilitate discussions among EU citizens on important and current topics. It is currently in use for deliberations on the EUComMeet platform serving translation between six languages: English, German, French, Italian, Polish, and Irish. This API is complementary to earlier work carried out which has been recently published in MDPI Analytics ([Lohar et al, 2023](https://www.mdpi.com/2813-2203/2/2/22)).
+The name stems from Polish writer and novelist Maria Kuncewiczowa.
 ```mermaid
 mindmap
-  root((TranslateAPI))
+  root((Wiczowa API))
     MT Server C
         GPU 1
             DE to FR
