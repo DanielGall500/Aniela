@@ -124,7 +124,7 @@ With only a few steps, you can run this API for yourself and connect it to the s
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/DanielGall500/TranslateAPI.git
+   git clone https://github.com/DanielGall500/Aniela.git
    ```
 
 2. Set up environment variables<br>
