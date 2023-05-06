@@ -64,7 +64,50 @@
 
 <!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
 
-TranslateAPI is an API built to securely and efficiently distribute translation requests among machine translation models, typically hosted on other servers. The API is built using Python 3.10 and implemented in FastAPI. This work was carried out at the ADAPT Centre in Dublin City University for [EUComMeet](https://www.eucommeet.eu/objectives-activities-nutshell/), a completely open-source platform to facilitate discussions among EU citizens on important and current topics. 
+TranslateAPI is an API built to securely and efficiently distribute translation requests among machine translation models, typically hosted on other servers. The API is built using Python 3.10 and implemented in FastAPI. This work was carried out at the [ADAPT Research Centre](https://www.adaptcentre.ie/) in Dublin City University for [EUComMeet](https://www.eucommeet.eu/objectives-activities-nutshell/), a completely open-source platform to facilitate discussions among EU citizens on important and current topics. It is currently in use for deliberations on the EUComMeet platform serving translation between six languages: English, German, French, Italian, Polish, and Irish. This API is complementary to earlier work carried out which has been recently published in MDPI Analytics ([Lohar et al, 2023](https://www.mdpi.com/2813-2203/2/2/22)).
+```mermaid
+mindmap
+  root((TranslateAPI))
+    MT Server C
+        GPU 1
+            DE to FR
+            EN to FR
+            FR to EN
+            GA to EN
+            IT to EN
+            PL to EN
+        GPU 2
+            DE to GA
+            EN to GA
+            FR to GA
+            GA to FR
+            IT to FR
+            PL to FR
+    MT Server B
+        GPU 1
+           DE to IT
+           EN to IT
+           FR to IT
+           GA to IT
+           IT to GA
+           PL to GA
+        GPU 2
+           DE to PL
+           EN to PL
+           FR to PL
+           GA to PL
+           IT to PL
+           PL to IT
+    MT Server A
+        GPU 1
+           DE to EN
+           EN to DE
+           FR to DE
+           GA to DE
+           IT to DE
+           PL to DE
+ ```
+           
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Built With
