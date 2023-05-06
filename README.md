@@ -55,7 +55,7 @@
 <!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
 
 Wiczowa is an API built to securely and efficiently distribute translation requests among machine translation models, typically hosted on other servers. The API is built using Python 3.10 and implemented in FastAPI. This work was carried out at the [ADAPT Research Centre](https://www.adaptcentre.ie/) in Dublin City University for [EUComMeet](https://www.eucommeet.eu/objectives-activities-nutshell/), a completely open-source platform to facilitate discussions among EU citizens on important and current topics. It is currently in use for deliberations on the EUComMeet platform serving translation between six languages: English, German, French, Italian, Polish, and Irish. This API is complementary to earlier work carried out which has been recently published in MDPI Analytics ([Lohar et al, 2023](https://www.mdpi.com/2813-2203/2/2/22)).
-The name stems from Polish writer and novelist Maria Kuncewiczowa.
+The name stems from the influential Polish translator Aniela Zagórska.
 ```mermaid
 mindmap
   root((Wiczowa API))
