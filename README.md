@@ -7,18 +7,18 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/DanielGall500/Aniela">
+  <a href="https://github.com/DanielGall500/Voss">
     <img src="app/static/images/adapt-cover.jpg" alt="Logo" width="150" height="100">
   </a>
 
-<h3 align="center">Aniela</h3>
+<h3 align="center">Voss</h3>
 
   <p align="center">
     A web API built to securely and efficiently handle requests between users and machine translation models. 
     <br />
-    <a href="https://github.com/DanielGall500/Aniela/issues">Report Bug</a>
+    <a href="https://github.com/DanielGall500/Voss/issues">Report Bug</a>
     ·
-    <a href="https://github.com/DanielGall500/Aniela/issues">Request Feature</a>
+    <a href="https://github.com/DanielGall500/Voss/issues">Request Feature</a>
   </p>
 </div>
 
@@ -54,11 +54,11 @@
 
 <!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
 
-Aniela is an API built to securely and efficiently distribute translation requests among machine translation models, typically hosted on other servers. The API is built using Python 3.10 and implemented in FastAPI. This work was carried out at the [ADAPT Research Centre](https://www.adaptcentre.ie/) in Dublin City University for [EUComMeet](https://www.eucommeet.eu/objectives-activities-nutshell/), a completely open-source platform to facilitate discussions among EU citizens on important and current topics. It is currently in use for deliberations on the EUComMeet platform serving translation between six languages: English, German, French, Italian, Polish, and Irish. This API is complementary to earlier work carried out which has been recently published in MDPI Analytics ([Lohar et al, 2023](https://www.mdpi.com/2813-2203/2/2/22)).
-The name stems from the influential Polish translator Aniela Zagórska.
+Voss is an API built to securely and efficiently distribute translation requests among machine translation models, typically hosted on other servers. The API is built using Python 3.10 and implemented in FastAPI. This work was carried out at the [ADAPT Research Centre](https://www.adaptcentre.ie/) in Dublin City University for [EUComMeet](https://www.eucommeet.eu/objectives-activities-nutshell/), a completely open-source platform to facilitate discussions among EU citizens on important and current topics. It is currently in use for deliberations on the EUComMeet platform serving translation between six languages: English, German, French, Italian, Polish, and Irish. This API is complementary to earlier work carried out which has been recently published in MDPI Analytics ([Lohar et al, 2023](https://www.mdpi.com/2813-2203/2/2/22)).
+The name stems from the influential German translator Johann Heinrich Voss, known for his translations of Homer's Odyssey and Iliad.
 ```mermaid
 mindmap
-  root((Aniela API))
+  root((Voss API))
     MT Server C
         GPU 1
             DE to FR
@@ -124,7 +124,7 @@ With only a few steps, you can run this API for yourself and connect it to the s
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/DanielGall500/Aniela.git
+   git clone https://github.com/DanielGall500/Voss.git
    ```
 
 2. Set up environment variables<br>
