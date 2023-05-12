@@ -61,6 +61,10 @@ class MTModelInformation:
         if ip and port:
             return f"http://{ip}:{port}/translator/translate"
         else:
+            logger.error("IP Found: {}", ip)
+            logger.error("Port Found: {}", port)
+            logger.error("Source Language: {}", src)
+            logger.error("Target Language: {}", tgt)
             raise Exception(f"Invalid Source / Target Language: {src}-{tgt}")
 
     def get_language_pair_server_IP_and_port(self, src: str, tgt: str):
