@@ -1,34 +1,24 @@
 <a name="readme-top"></a>
 
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
-
-
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/DanielGall500/TranslateAPI">
+  <a href="https://github.com/DanielGall500/Voss">
     <img src="app/static/images/adapt-cover.jpg" alt="Logo" width="150" height="100">
   </a>
 
-<h3 align="center">ADAPT Translate API</h3>
+<h3 align="center">Voss</h3>
 
   <p align="center">
-    A web API built to securely and efficiently handle requests between users and machine translation servers. 
+    A web API built to securely and efficiently handle requests between users and machine translation models. 
     <br />
-    <a href="https://github.com/DanielGall500/TranslateAPI/issues">Report Bug</a>
+    <a href="https://github.com/DanielGall500/Voss/issues">Report Bug</a>
     ·
-    <a href="https://github.com/DanielGall500/TranslateAPI/issues">Request Feature</a>
+    <a href="https://github.com/DanielGall500/Voss/issues">Request Feature</a>
   </p>
 </div>
 
@@ -64,7 +54,51 @@
 
 <!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
 
-TranslateAPI is an API built to securely and efficiently distribute translation requests among machine translation models, typically hosted on other servers. The API is built using Python 3.10 and implemented in FastAPI. This work was carried out at the ADAPT Centre in Dublin City University for [EUComMeet](https://www.eucommeet.eu/objectives-activities-nutshell/), a completely open-source platform to facilitate discussions among EU citizens on important and current topics. 
+Voss is an API built to securely and efficiently distribute translation requests among machine translation models, typically hosted on other servers. The API is built using Python 3.10 and implemented in FastAPI. This work was carried out at the [ADAPT Research Centre](https://www.adaptcentre.ie/) in Dublin City University for [EUComMeet](https://www.eucommeet.eu/objectives-activities-nutshell/), a completely open-source platform to facilitate discussions among EU citizens on important and current topics. It is currently in use for deliberations on the EUComMeet platform serving translation between six languages: English, German, French, Italian, Polish, and Irish. This API is complementary to earlier work carried out which has been recently published in MDPI Analytics ([Lohar et al, 2023](https://www.mdpi.com/2813-2203/2/2/22)).
+The name stems from the influential German translator Johann Heinrich Voss, known for his translations of Homer's Odyssey and Iliad.
+```mermaid
+mindmap
+  root((Voss API))
+    MT Server C
+        GPU 1
+            DE to FR
+            EN to FR
+            FR to EN
+            GA to EN
+            IT to EN
+            PL to EN
+        GPU 2
+            DE to GA
+            EN to GA
+            FR to GA
+            GA to FR
+            IT to FR
+            PL to FR
+    MT Server B
+        GPU 1
+           DE to IT
+           EN to IT
+           FR to IT
+           GA to IT
+           IT to GA
+           PL to GA
+        GPU 2
+           DE to PL
+           EN to PL
+           FR to PL
+           GA to PL
+           IT to PL
+           PL to IT
+    MT Server A
+        GPU 1
+           DE to EN
+           EN to DE
+           FR to DE
+           GA to DE
+           IT to DE
+           PL to DE
+ ```
+           
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Built With
@@ -90,7 +124,7 @@ With only a few steps, you can run this API for yourself and connect it to the s
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/DanielGall500/TranslateAPI.git
+   git clone https://github.com/DanielGall500/Voss.git
    ```
 
 2. Set up environment variables<br>
