@@ -114,4 +114,7 @@ class MTModelInformation:
         source_lang_removed = [x for x in all_languages if x != src]
         return source_lang_removed
 
+    def get_config(self) -> dict:
+        return self.CONFIG
+
 model_info = MTModelInformation()
