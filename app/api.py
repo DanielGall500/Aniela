@@ -5,8 +5,9 @@ from app.models import LoginDetails, TranslateRequest, TranslateResponse
 from app.auth.auth_handler import authenticate_user
 from app.auth.auth_bearer import JWTBearer, signJWT
 from app.mt_models.connection import MTRequestHandler
-from fastapi.templating import Jinja2Templates
 from app.mt_models.connection import MTServerConnection
+from app.mt_models.information import MTModelInformation
+from fastapi.templating import Jinja2Templates
 from loguru import logger
 from datetime import datetime
 import sqlite3
@@ -47,6 +48,7 @@ cursor = db_connection.cursor()
 
 mt_request_handler = MTRequestHandler()
 mt_server_connection = MTServerConnection()
+mt_server_information = MTModelInformation()
 
 @app.post("/translate", dependencies=[Depends(JWTBearer())], response_model=TranslateResponse, 
     tags=["Translation Calls"], status_code=status.HTTP_201_CREATED,
@@ -118,14 +120,19 @@ async def dashboard(request: Request):
     as_dict = mt_server_connection.all_as_dict()
     return templates.TemplateResponse("index.html", {"request": request, "connections": as_dict})
 
+@app.get("/", include_in_schema=False, tags=["Maintenance & Testing"])
+async def root():
+    return RedirectResponse(url="/dashboard")
+
 @app.get("/dashboard/about", response_class=HTMLResponse, 
     description="Check the status of each of the language models", include_in_schema=False, tags=["Maintenance & Testing"])
 async def about(request: Request):
     logger.info("About page accessed.")
     return templates.TemplateResponse("about.html", {"request": request})
 
-@app.get("/", include_in_schema=False, tags=["Maintenance & Testing"])
-async def root():
-    return RedirectResponse(url="/dashboard")
-
-    
+@app.get("/dashboard/setup", response_class=HTMLResponse, 
+    description="View and edit the current server setup for your models.", include_in_schema=False, tags=["Maintenance & Testing"])
+async def setup(request: Request):
+    logger.info("Setup page accessed.")
+    server_config = mt_server_information.get_config()
+    return templates.TemplateResponse("setup.html", {"request": request, "server_config": server_config})
