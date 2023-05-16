@@ -36,14 +36,14 @@ class MTModelInformation:
     # specific source and target language pair exists on
     CONFIG = {}
     def __init__(self):
-        get_server_data = f"SELECT source, target, server, id FROM models"
+        get_server_data = f"SELECT source, target, server, gpu, id FROM models"
         try:
             server_data = cursor.execute(get_server_data).fetchall()
         except Exception as e:
             logger.error("Connection to database not successful. Did you provide the correct DB path?")
             raise Exception("Invalid SQL Database for Server Data.")
 
-        for src, tgt, server, id in server_data:
+        for src, tgt, server, gpu, id in server_data:
             # ensure that the mult-dimensional dictionary is 
             # set up with both source and target as keys
             if not src in self.CONFIG:
@@ -53,6 +53,7 @@ class MTModelInformation:
                 self.CONFIG[src][tgt] = {}
 
             self.CONFIG[src][tgt]['server'] = server
+            self.CONFIG[src][tgt]['gpu'] = gpu
             self.CONFIG[src][tgt]['id'] = id
 
     # The URL that will correspond to a specific source and target language
