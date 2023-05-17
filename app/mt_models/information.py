@@ -14,7 +14,7 @@ def get_server_IP_from_config(server: str) -> str:
         server_ip = str(app_config[f"{server}_IP"])
     except Exception as e:
         logger.error(f"Server {server} not found.")
-        logger.error(e)
+        raise Exception(e)
     return str(server_ip)
 
 def get_server_port_from_config(server: str) -> int:
@@ -22,7 +22,7 @@ def get_server_port_from_config(server: str) -> int:
         server_port = app_config[f"{server}_PORT"]
     except Exception as e:
         logger.error(f"Server {server} not found.")
-        logger.error(e)
+        raise Exception(e)
     return int(server_port)
 
 # -- Translation Model Information --
@@ -36,6 +36,11 @@ class MTModelInformation:
     # specific source and target language pair exists on
     CONFIG = {}
     def __init__(self):
+        self.refresh()
+
+    # Connects to SQLite database and retrieves most up-to-date
+    # model configuration
+    def refresh(self):
         get_server_data = f"SELECT source, target, server, gpu, id FROM models"
         try:
             server_data = cursor.execute(get_server_data).fetchall()
@@ -118,4 +123,5 @@ class MTModelInformation:
     def get_config(self) -> dict:
         return self.CONFIG
 
+# imported and used in other classes
 model_info = MTModelInformation()

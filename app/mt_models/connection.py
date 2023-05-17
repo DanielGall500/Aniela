@@ -44,6 +44,9 @@ class MTServerConnection:
         
         try:
             server_ip, server_port = model_info.get_language_pair_server_IP_and_port(src,tgt)
+            if not server_ip or not server_port:
+                return False
+
             connection_result = lang_pair_socket.connect_ex((server_ip, server_port))
 
             logger.info("Attempting to establish connection to {}-{}", src, tgt)
