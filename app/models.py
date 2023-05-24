@@ -14,9 +14,7 @@ class TranslateResponse(BaseModel):
     status: str = Field("SUCCESS", description="The return status of the request - either SUCCESS or ERROR.")
     result: dict = {}
 
-class AddModelForm(BaseModel):
-    source: str
-    target: str
-    server: str
-    gpu: str
-    modelId: str
+class DeleteRequest(BaseModel):
+    src: str = Field(description="The source language.")
+    tgt: str = Field(description="The target language.")
+    model_id: str = Field(description="The unique ID of the model you wish to delete.")

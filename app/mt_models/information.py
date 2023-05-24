@@ -3,9 +3,6 @@ import numpy
 from dotenv import dotenv_values
 from loguru import logger
 
-db = sqlite3.connect("app/database.sqlite")
-cursor = db.cursor()
-
 # -- JWT Configuration Variables --
 app_config = dotenv_values('app/.env')
 
@@ -41,9 +38,15 @@ class MTModelInformation:
     # Connects to SQLite database and retrieves most up-to-date
     # model configuration
     def refresh(self):
+        db = sqlite3.connect("app/database.sqlite") 
+        cursor = db.cursor()
+
         get_server_data = f"SELECT source, target, server, gpu, id FROM models"
+        self.CONFIG = {}
         try:
             server_data = cursor.execute(get_server_data).fetchall()
+            logger.info("!!!")
+            logger.info(server_data)
         except Exception as e:
             logger.error("Connection to database not successful. Did you provide the correct DB path?")
             raise Exception("Invalid SQL Database for Server Data.")
@@ -60,6 +63,7 @@ class MTModelInformation:
             self.CONFIG[src][tgt]['server'] = server
             self.CONFIG[src][tgt]['gpu'] = gpu
             self.CONFIG[src][tgt]['id'] = id
+        db.close()
 
     # The URL that will correspond to a specific source and target language
     def get_language_pair_endpoint(self, src: str, tgt:str) -> str:

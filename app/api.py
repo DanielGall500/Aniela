@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends, Request, status, Form
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse, HTMLResponse
-from app.models import LoginDetails, TranslateRequest, TranslateResponse, AddModelForm
+from app.models import LoginDetails, TranslateRequest, TranslateResponse, DeleteRequest
 from app.auth.auth_handler import authenticate_user
 from app.auth.auth_bearer import JWTBearer, signJWT
 from app.mt_models.connection import MTRequestHandler
@@ -134,6 +134,7 @@ async def about(request: Request):
     description="View and edit the current server setup for your models.", include_in_schema=False, tags=["Maintenance & Testing"])
 async def setup(request: Request):
     logger.info("Setup page accessed.")
+    model_info.refresh()
     server_config = model_info.get_config()
     return templates.TemplateResponse("setup.html", {"request": request, "server_config": server_config})
 
@@ -159,4 +160,22 @@ async def add(
         logger.error(error)
 
     model_info.refresh()
+    return RedirectResponse("/dashboard/setup", status_code=status.HTTP_303_SEE_OTHER) 
+
+@app.post("/dashboard/setup/delete")
+async def delete(
+    request: DeleteRequest,
+):
+    model_id = request.model_id
+
+    delete_model_query = """DELETE FROM models
+                            WHERE id=?;"""
+    try:
+        cursor.execute(delete_model_query, (model_id,))
+        db_connection.commit()
+        logger.success("Model removed from setup.")
+    except sqlite3.Error as error:
+        logger.error("Failed to delete model from setup.")
+        logger.error(error)
+
     return RedirectResponse("/dashboard/setup", status_code=status.HTTP_303_SEE_OTHER) 

@@ -19,6 +19,9 @@
         <td style="text-align: left;">{{server_config[src][tgt]["server"]}}</td>
         <td style="text-align: left;">{{server_config[src][tgt]["gpu"]}}</td>
         <td style="text-align: left;">{{server_config[src][tgt]["id"]}}</td>
+        <td><button id="deleteBtn" class = "mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect" onclick="deleteRows('{{src}}', '{{tgt}}', '{{server_config[src][tgt].id}}')">
+          <i class = "material-icons">delete</i></button></td>
+        <td> </td>
       </tr>
       {% endfor %}
     {% endfor %}
@@ -50,6 +53,28 @@
         <i class = "material-icons">add</i></button></td>
       <td> </td>
     </form>
+
   </div>
-<script src="/static/js/data-table-mechanics.js"></script>
+  <script>
+  // Get the button element
+    var printButton = document.getElementById('deleteBtn');
+
+    // -- TODO --
+    // move this to its own JS file
+    // implement addRows with JS instead of a form
+
+    function deleteRows(src, tgt, id) {
+        console.log(id)
+
+        // Make an HTTP request to the FastAPI endpoint
+        fetch('/dashboard/setup/delete', {
+            method: 'POST',  // Or 'GET', 'PUT', etc. depending on your API
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ "src": src, "tgt": tgt, "model_id": id }),
+        })
+        window.location.href = "/dashboard/setup"
+    }
+  </script>
 {% endblock content %}
