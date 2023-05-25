@@ -19,7 +19,7 @@
         <td style="text-align: left;">{{server_config[src][tgt]["server"]}}</td>
         <td style="text-align: left;">{{server_config[src][tgt]["gpu"]}}</td>
         <td style="text-align: left;">{{server_config[src][tgt]["id"]}}</td>
-        <td><button id="deleteBtn" class = "mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect" onclick="deleteRows('{{src}}', '{{tgt}}', '{{server_config[src][tgt].id}}')">
+        <td><button id="deleteBtn" class = "mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect" onclick="deleteRow('{{src}}', '{{tgt}}', '{{server_config[src][tgt].id}}')">
           <i class = "material-icons">delete</i></button></td>
         <td> </td>
       </tr>
@@ -28,53 +28,29 @@
   </tbody>
 </table>
 <div class="mdl-cell mdl-cell--12-col">
-    <form id="addModelRowForm" action="/dashboard/setup/add" method="post">
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="source" name="source"/>
-        <label class="mdl-textfield__label" for="newTask">Add Source</label>
-      </div>
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="target" name="target" />
-        <label class="mdl-textfield__label" for="newTask">Add Target</label>
-      </div>
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="server" name="server"/>
-        <label class="mdl-textfield__label" for="newTask">Add Server</label>
-      </div>
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="gpu" name="gpu"/>
-        <label class="mdl-textfield__label" for="newTask">Add GPU</label>
-      </div>
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="modelId" name="modelId"/>
-        <label class="mdl-textfield__label" for="newTask">Add Model ID</label>
-      </div>
-      <td><button id="addBtn" class = "mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect" style="margin: 10px;">
-        <i class = "material-icons">add</i></button></td>
-      <td> </td>
-    </form>
-
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input class="mdl-textfield__input" type="text" id="source" name="source"/>
+      <label class="mdl-textfield__label" for="newTask">Add Source</label>
+    </div>
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input class="mdl-textfield__input" type="text" id="target" name="target" />
+      <label class="mdl-textfield__label" for="newTask">Add Target</label>
+    </div>
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input class="mdl-textfield__input" type="text" id="server" name="server"/>
+      <label class="mdl-textfield__label" for="newTask">Add Server</label>
+    </div>
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input class="mdl-textfield__input" type="text" id="gpu" name="gpu"/>
+      <label class="mdl-textfield__label" for="newTask">Add GPU</label>
+    </div>
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input class="mdl-textfield__input" type="text" id="id" name="modelId"/>
+      <label class="mdl-textfield__label" for="newTask">Add Model ID</label>
+    </div>
+    <td><button id="addBtn" class = "mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect" onclick="addRow()" style="margin: 10px;">
+      <i class = "material-icons">add</i></button></td>
+    <td> </td>
   </div>
-  <script>
-  // Get the button element
-    var printButton = document.getElementById('deleteBtn');
-
-    // -- TODO --
-    // move this to its own JS file
-    // implement addRows with JS instead of a form
-
-    function deleteRows(src, tgt, id) {
-        console.log(id)
-
-        // Make an HTTP request to the FastAPI endpoint
-        fetch('/dashboard/setup/delete', {
-            method: 'POST',  // Or 'GET', 'PUT', etc. depending on your API
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ "src": src, "tgt": tgt, "model_id": id }),
-        })
-        window.location.href = "/dashboard/setup"
-    }
-  </script>
+  <script src="/static/js/data-table-mechanics.js"></script>
 {% endblock content %}

@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends, Request, status, Form
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse, HTMLResponse
-from app.models import LoginDetails, TranslateRequest, TranslateResponse, DeleteRequest
+from app.models import LoginDetails, TranslateRequest, TranslateResponse, DeleteRequest, AddRequest
 from app.auth.auth_handler import authenticate_user
 from app.auth.auth_bearer import JWTBearer, signJWT
 from app.mt_models.connection import MTRequestHandler
@@ -10,7 +10,6 @@ from app.mt_models.information import model_info
 from fastapi.templating import Jinja2Templates
 from loguru import logger
 from datetime import datetime
-from typing import Annotated
 import sqlite3
 import time
 
@@ -140,19 +139,20 @@ async def setup(request: Request):
 
 @app.post("/dashboard/setup/add")
 async def add(
-    request: Request,
-    source: Annotated[str, Form()], 
-    target: Annotated[str, Form()], 
-    server: Annotated[str, Form()], 
-    gpu: Annotated[str, Form()], 
-    modelId: Annotated[str, Form()]
+    request: AddRequest,
 ):
+    source = request.src
+    target = request.tgt
+    server = request.server
+    gpu = request.gpu
+    model_id = request.id
+
     add_model_query = """INSERT INTO models
                             (source, target, server, gpu, id) 
                         VALUES 
                             (?, ?, ?, ?, ?);"""
     try:
-        cursor.execute(add_model_query, (source, target, server, gpu, modelId))
+        cursor.execute(add_model_query, (source, target, server, gpu, model_id))
         db_connection.commit()
         logger.success("New model added to database.")
     except sqlite3.Error as error:

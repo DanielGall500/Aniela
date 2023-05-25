@@ -45,8 +45,6 @@ class MTModelInformation:
         self.CONFIG = {}
         try:
             server_data = cursor.execute(get_server_data).fetchall()
-            logger.info("!!!")
-            logger.info(server_data)
         except Exception as e:
             logger.error("Connection to database not successful. Did you provide the correct DB path?")
             raise Exception("Invalid SQL Database for Server Data.")
