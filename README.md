@@ -226,7 +226,7 @@ Distributed under the GPL-3.0 License. See `LICENSE.txt` for more information.
 
 Daniel Gallagher - [LinkedIn](https://www.linkedin.com/in/daniel-gallagher-a520161a3/) - daniel.gallagher.js@gmail.com
 
-Project Link: [https://github.com/DanielGall500/TranslateAPI](https://github.com/DanielGall500/TranslateAPI)
+Project Link: [https://github.com/DanielGall500/Voss](https://github.com/DanielGall500/Voss)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
