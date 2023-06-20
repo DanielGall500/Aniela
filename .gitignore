@@ -1,5 +1,6 @@
 # Debug
 debug_gunicorn_start.sh
+/app/tests
 
 # Documents
 report/
