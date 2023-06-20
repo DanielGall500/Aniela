@@ -177,9 +177,86 @@ It is good practice to setup a reverse proxy such as Nginx to directly handle an
 
 <!-- USAGE EXAMPLES -->
 ## Usage
-Coming soon.
+We will now look at both how one can make translation calls to the API, as well as login with a username and password.
 
-<!--_For more examples, please refer to the [Documentation](https://example.com)_-->
+### Translate
+
+Submit a translation request to the API. A JSON web token must be provided in the header, which is given to you once you log in.
+
+**AUTHORIZATIONS:** JWTBearer
+
+**REQUEST BODY SCHEMA:** application/json
+
+- `src` (required): string (Src) - The source language.
+- `tgt` (required): string (Tgt) - The target language.
+- `text` (required): string (Text) - The text which you want to translate.
+
+**Responses:**
+- 201 Successful Response
+- 422 Validation Error
+
+**POST /translate**
+
+**Request samples:**
+
+```json
+{
+  "src": "en",
+  "tgt": "de",
+  "text": "Hello, my name is Daniel"
+}
+```
+
+**Response samples:**
+
+```json
+{
+    "status": "SUCCESS",
+    "result": {
+        "de": "Hallo, ich heiße Daniel",
+    }
+}
+```
+
+### Login
+
+Log in using your username and password in order to receive a JWT. These details are stored in the SQLite database with hashed passwords.
+
+**REQUEST BODY SCHEMA:** application/json
+
+- `username` (required): string (Username)
+- `password` (required): string (Password)
+
+**Responses:**
+- 201 Successful Response
+- 422 Validation Error
+
+**POST /login**
+
+**Request samples:**
+
+Payload
+Content type: application/json
+
+```json
+{
+  "username": "string",
+  "password": "string"
+}
+```
+
+**Response samples:**
+
+Content type: application/json
+
+- 201
+- 422
+
+```json
+{
+    "token": "eyJhbGciOi..."
+}
+```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
