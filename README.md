@@ -195,6 +195,7 @@ The API previously relied on Flask and Waitress which provided a WSGI server tha
 
 ### Model Dashboard & Documentation
 A dashboard GUI (view here) has been developed which displays the current status of each of the 30 language models, as well as the current translation latency for each model. From this dashboard one can also navigate to the documentation (view here) for the API, which contains the information needed in order to send requests and the types of responses one should expect. Note that without a username and password provided and stored by ADAPT, one cannot carry out any translations.
+![Dashboard](resources/live-model-dashboard-example.png)
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTRIBUTING -->
