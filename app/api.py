@@ -82,6 +82,7 @@ def translate(request: TranslateRequest):
 
     return response
 
+# TODO: move this to a more appropriate location
 def store_translation(source, target, src_input, tgt_output, latency):
     store_translation_query = """INSERT INTO translations
                             (time, source, target, input, output, latency) 
@@ -137,7 +138,7 @@ async def setup(request: Request):
     server_config = model_info.get_config()
     return templates.TemplateResponse("setup.html", {"request": request, "server_config": server_config})
 
-@app.post("/dashboard/setup/add")
+@app.post("/dashboard/setup/add", description="Add a model to the current setup.", tags=["Model Setup"])
 async def add(
     request: AddRequest,
 ):
@@ -162,9 +163,9 @@ async def add(
     model_info.refresh()
     return RedirectResponse("/dashboard/setup", status_code=status.HTTP_303_SEE_OTHER) 
 
-@app.post("/dashboard/setup/delete")
+@app.post("/dashboard/setup/delete", description="Delete a model from the current setup.", tags=["Model Setup"])
 async def delete(
-    request: DeleteRequest,
+    request: DeleteRequest
 ):
     model_id = request.model_id
 
