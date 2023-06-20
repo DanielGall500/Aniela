@@ -1,3 +1,6 @@
+# Debug
+debug_gunicorn_start.sh
+
 # Documents
 report/
 
