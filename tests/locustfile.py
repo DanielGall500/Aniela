@@ -2,8 +2,13 @@ from locust import HttpUser, task, between
 from dotenv import dotenv_values
 from enum import Enum
 import requests
-import time
 import json
+
+"""-EXAMPLE TEST WITH LOCUST----------------------------------------------------------------------
+This is an example of a locustfile which can be used to test the performance of the API and your
+machine translation models in real-time. It imitates N users, making translation requests with the
+parameters set below. It is set up for 6 languages as an example.
+-----------------------------------------------------------------------------------------------"""
 
 class Language(Enum):
     English = 'en'
@@ -14,7 +19,6 @@ class Language(Enum):
     Italian = 'it'
     All = 'all'
 
-#Choose the language to use
 sample_sentences = {
     Language.English: "This is the daily test of the EUComMeet MT models.",
     Language.Italian: "Questo è il test quotidiano dei modelli EUComMeet MT.",
@@ -24,24 +28,17 @@ sample_sentences = {
     Language.Irish: "Seo tástáil laethúil na samhlacha EUComMeet MT.",
 }
 
-# environment variables
+# import the example username and password
+# from the environment variables file which
+# you have set up.
 env_config = dotenv_values()
-username = env_config["USERNAME"]
-password_v1 = env_config["PASSWORD_V1"]
-password_v2 = env_config["PASSWORD_V2"]
-
-# which version of the platform are we testing
-IS_VERSION_TWO = True
+username = env_config["TEST_USERNAME"]
+password = env_config["TEST_PASSWORD"]
 
 #URL variables
-domain = "https://mt.computing.dcu.ie"
+domain = "127.0.0.1"
 trans_endpoint = '/translate'
 login_endpoint = '/login'
-
-#Login variables
-username = "daniel"
-password = password_v2 if IS_VERSION_TWO else password_v1
-target_lang = Language.All
 
 def get_token():
     # send all info necessary to receive a JWT
@@ -64,13 +61,10 @@ token = get_token()
 class QuickstartUser(HttpUser):
     wait_time = between(1, 2)
 
+    # set up our headers on starting the testing
     def on_start(self):
         self.client.headers['Content-Type'] = 'application/json'
-        # set headers for all further requests
-        if IS_VERSION_TWO:
-            self.client.headers['Authorization'] = 'Bearer ' + token
-        else:
-            self.client.headers['x-access-token'] = token
+        self.client.headers['Authorization'] = 'Bearer ' + token
 
     @task
     def translate_from_german(self):
@@ -96,6 +90,7 @@ class QuickstartUser(HttpUser):
     def translate_from_irish(self):
         self.translate_from(Language.Irish)
 
+    # send a translation request
     def translate_from(self, src: Language):
         # load the translation request data
         data = {
