@@ -119,7 +119,7 @@ The project is built using Python 3.10 and FastAPI, an asynchronous framework fo
 ## Getting Started
 To get a local copy up and running follow the following steps. On the initial setup, the dashboard should note all MT models as ```offline``` before you have properly configured the MT servers.
 
-# Installation 
+### Installation 
 With only a few steps, you can run this API for yourself and connect it to the servers where your MT models are being hosted. For our use case, we were connecting to the built-in OpenNMT MT server.
 
 1. Clone the repo
