@@ -13,13 +13,20 @@ from datetime import datetime
 import sqlite3
 import time
 
+"""----VOSS API---------------------------------------------------------------
+This file contains the primary API implementation of this project. The API 
+includes routes for translation calls, user authentication, and maintenance 
+& testing. The translation calls allow users to make translation requests 
+using specific language codes. 
+---------------------------------------------------------------------------"""
+
 app = FastAPI(
-    title="Adapt Translation API",
+    title="Voss Translation API",
     description="This API provides efficient and secure connection to 30 language models comprising of six available language: English, German, French, Italian, Polish, and Irish.",
     version="2.0",
     contact={
-        "name": "Adapt Centre, Dublin City University",
-        "url": "https://www.adaptcentre.ie/",
+        "name": "Your Name Or Organisation",
+        "url": "https://www.yourwebsite.ie",
     },
     openapi_tags=[
         {
