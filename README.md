@@ -111,6 +111,7 @@ The project is built using Python 3.10 and FastAPI, an asynchronous framework fo
 * User Verification (Argon2, JWT)
     * Password creation and authentication uses Argon2 password hashing. Through the ```/login``` endpoint users can verify their authenticity and receive a JSON web token (handled by ```pyjwt```) which then must included in the headers of any translation request made to the server.
 
+Note that Voss does not host the MT models itself, but rather interacts with models that are already hosted. For self-hosting the translation models yourself, please see [OpenNMT MT Server](https://github.com/DanielGall500/OpenNMT-MT-server)
 <!-- * [![FastAPI]][FastAPI-url] -->
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
