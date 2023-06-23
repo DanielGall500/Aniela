@@ -4,6 +4,15 @@ from loguru import logger
 import socket
 import time
 
+"""
+----MTServerConnection Class-----------------------------------------------------
+THe MTServerConnection class tests the connection between the your MT models and
+this API. This can be seen on each refresh of the dashboard, where the API sends
+a test sentence to each model and ensures that it receives a translation in return.
+For each new language introduced, ensure that you add the translation for your 
+example sentence below in the model_translation_test dict.
+--------------------------------------------------------------------------------
+"""
 model_translation_test = {
     "en": "Its major markets include Spain, Greece, Poland and Turkey.",
     "de": "Zu den Hauptmärkten gehören Spanien, Griechenland, Polen und die Türkei.",
@@ -29,10 +38,9 @@ class MTServerConnection:
         return connection_view
 
     def connect_to_all(self):
-        language_pairs = model_info.get_all_languages_pairs()
+        language_pairs = model_info.get_all_language_pairs()
         for pair in language_pairs:
             src, tgt = pair 
-            # formerly await
             self.connect_to(src,tgt)
         return self.all_as_dict()
 

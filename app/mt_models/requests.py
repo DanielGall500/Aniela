@@ -5,10 +5,15 @@ from loguru import logger
 import nltk
 import requests
 
-nltk.download("punkt")
+"""
+----MTRequestHandler Class------------------------------------------------
+One of the most important classes in the API - makes HTTP requests to your
+hosted models using the setup you have provided.
+Provides encoding of input, translation, and decoding of output.
+--------------------------------------------------------------------------
+"""
 
 class MTRequestHandler:
-    # Create sacremoses
     mpn = MosesPunctNormalizer()
     moses_tokenizers = {}
     moses_detokenizers = {}
@@ -16,6 +21,11 @@ class MTRequestHandler:
     # Messages for the various return states
     STATUS_OK = "SUCCESS"
     STATUS_ERROR = "ERROR"
+
+    def __init__(self):
+        # Necessary for using Moses tokenisation and
+        # de-tokenisation.
+        nltk.download("punkt")
         
     def translate(self, src: str, tgt: str, text: str, timeout: float = None):
         # Assume an error until proven successful!
@@ -53,17 +63,16 @@ class MTRequestHandler:
                 # Put together all the returned sentences into one string
                 target_output = self._combine_response_sentences(response)
 
-                # Detokenize this returned output to make it more reader-friendly
+                # Detokenize this returned output to improve its readability.
                 detokenized_target_output = self._detokenize(target_output, tgt)
 
                 # Save the resulting translation to the response
                 out['result'][target_langs[i]] = detokenized_target_output
                 out['state'] = self.STATUS_OK
 
-        return out
+                self._log_info(src, tgt, text, detokenized_target_output)
 
-    def get_available_languages(self):
-        return model_info.get_all_languages()
+        return out
 
     def _tokenize(self, src_text: str, src_lang: str):
         # retrieve the tokenizer for a specific language
@@ -94,20 +103,23 @@ class MTRequestHandler:
         tgt_text = mt.detokenize(tgt_sents.split())
         return tgt_text
 
+    # Make a HTTP post request to your MT model given the endpoint and sentences
+    # to be translated. 
     def _send_request_to_MT_server(self, endpoint: str, sentences: list[str], timeout: float = None):
         return requests.post(url=endpoint, json=sentences, timeout=timeout)
 
+    # Check if the response from your MT model has been successful
     def _is_valid_server_response(self, response: requests.Response):
         return response.status_code == 200
 
+    # Put the individual sentences of your input back together.
     def _combine_response_sentences(self, target_sentences) -> str:
-        # TODO: error handling
         target_output = " ".join(target_sentence["tgt"] for target_sentence in target_sentences)
         return target_output
 
-    def _log_info(self, src: str, tgt: str, text: str):
+    def _log_info(self, src: str, tgt: str, text: str, output: str):
         logger.info("-- New Translation --")
         logger.info(f"source: {src}, target: {tgt}")
         logger.info(f"Input: {text}")
-        logger.info(f"Output: {text}")
+        logger.info(f"Output: {output}")
         logger.info("----")

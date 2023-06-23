@@ -3,9 +3,22 @@ import numpy
 from dotenv import dotenv_values
 from loguru import logger
 
+"""
+----MTModelInformation Class--------------------------------------
+This class reads, stores, and provides information on the MT model
+setup that you have specified in the SQLite database, using either
+SQL injections or the provided model setup feature in the API's
+interactive dashboard.
+This configuration is loaded into a Python dictionary upon startup,
+and refreshed each time the table is updated in the dashboard.
+------------------------------------------------------------------
+"""
+
 # -- JWT Configuration Variables --
 app_config = dotenv_values('app/.env')
 
+# Match a server name (e.g EUCOM_A) to its IP adddress,
+# which must be specified in your environment variables.
 def get_server_IP_from_config(server: str) -> str:
     try:
         server_ip = str(app_config[f"{server}_IP"])
@@ -14,6 +27,8 @@ def get_server_IP_from_config(server: str) -> str:
         raise Exception(e)
     return str(server_ip)
 
+# Similarly, match a server name (e.g EUCOM_A) to its port,
+# which also must be specified in your environment variables.
 def get_server_port_from_config(server: str) -> int:
     try:
         server_port = app_config[f"{server}_PORT"]
@@ -22,21 +37,16 @@ def get_server_port_from_config(server: str) -> int:
         raise Exception(e)
     return int(server_port)
 
-# -- Translation Model Information --
-# The information provided by this class should be loaded into a python dictionary,
-# assuming that it will not change once the models are up and running.
-# Calling it for each translation would be an unnecessarily costly.
-
 class MTModelInformation:
-    # Language models can exist on different IPs and ports
-    # This function will return which IP-port combination a
-    # specific source and target language pair exists on
     CONFIG = {}
+    
+    # Upon API startup, load our model setup
+    # from the SQLite datbase.
     def __init__(self):
         self.refresh()
 
-    # Connects to SQLite database and retrieves most up-to-date
-    # model configuration
+    # Refreshes the model setup - should be called
+    # whenever there is an update to the database.
     def refresh(self):
         db = sqlite3.connect("app/database.sqlite") 
         cursor = db.cursor()
@@ -63,7 +73,8 @@ class MTModelInformation:
             self.CONFIG[src][tgt]['id'] = id
         db.close()
 
-    # The URL that will correspond to a specific source and target language
+    # For a given source and target language, retrieve the URL
+    # which corresponds to this language model.
     def get_language_pair_endpoint(self, src: str, tgt:str) -> str:
         ip, port = self.get_language_pair_server_IP_and_port(src, tgt)
         if ip and port:
@@ -75,6 +86,8 @@ class MTModelInformation:
             logger.error("Target Language: {}", tgt)
             raise Exception(f"Invalid Source / Target Language: {src}-{tgt}")
 
+    # For a given source and target language, retrieve the IP and port
+    # combination corresponding to where this model is being hosted.
     def get_language_pair_server_IP_and_port(self, src: str, tgt: str):
         try:
             server_name = self.get_server(src, tgt)
@@ -85,12 +98,16 @@ class MTModelInformation:
 
         return str(server_ip), int(server_port)
 
+    # Check if the model setup actually contains
+    # a given source-target language pair.
     def _contains_language_pair(self, src: str, tgt: str):
         if src in self.CONFIG:
             if tgt in self.CONFIG[src]:
                 return True
         return False
 
+    # Retrieve the name of the server in which a particular
+    # source-target language pair is stored.
     def get_server(self, src: str, tgt: str) -> str | None:
         if self._contains_language_pair(src, tgt):
             server_name = self.CONFIG[src][tgt]['server']
@@ -104,7 +121,9 @@ class MTModelInformation:
             return int(model_ID)
         return None
 
-    def get_all_languages_pairs(self) -> list[list]:
+    # All language pairs, represented as a list.
+    # Note both combinations of the same two languages are included.
+    def get_all_language_pairs(self) -> list[list]:
         pairs = []
         for src in self.CONFIG.keys():
             for tgt in self.CONFIG[src].keys():
@@ -112,16 +131,22 @@ class MTModelInformation:
                 pairs.append(p)
         return pairs
 
+    # A list of all unique languages included
+    # in the model setup.
     def get_all_languages(self) -> list:
-        all_language_pairs = self.get_all_languages_pairs()
+        all_language_pairs = self.get_all_language_pairs()
         all_languages = list(set(list(numpy.concatenate(all_language_pairs).flat)))
         return all_languages
 
+    # A list of all target languages included
+    # in the model setup.
     def get_all_target_languages(self, src: str) -> list:
         all_languages = self.get_all_languages()
         source_lang_removed = [x for x in all_languages if x != src]
         return source_lang_removed
 
+    # Retrieve the current and most
+    # up-to-date model setup.
     def get_config(self) -> dict:
         return self.CONFIG
 
